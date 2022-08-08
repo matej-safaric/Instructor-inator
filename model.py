@@ -51,6 +51,9 @@ class Ura:
         else:
             return f'{self.cas}: {self.predmet.ime} {self.predmet.stopnja} - {self.ucenec.ime_priimek[1]} {self.ucenec.ime_priimek[0]}'
 
+    def spremeni_stopnjo_zasedenosti(self, stopnja):
+        self.stopnja_zasedenosti = stopnja
+
 @dataclass
 class INS:
     ure: List[Ura]
@@ -58,8 +61,32 @@ class INS:
     predmeti: List[Predmet]
 
     
+primer = INS(
+    [
+        Ura(datetime.now(), 1, Predmet('matematika', 1), Uporabnik(('Safaric', 'Matej'), 'Prof', '1234', 1, True)),
+        Ura(datetime(2022, 8, 9, 8), 1, Predmet('fizika', 2), Uporabnik(('Alfi', 'Snific'), 'Ucko', '4321', 2, False))
+    ],
+    [
+        Uporabnik(('Safaric', 'Matej'), 'Prof', '1234', 1, True),
+        Uporabnik(('Alfi', 'Snific'), 'Ucko', '4321', 2, False)
+    ],
+    [
+        Predmet('matematika', 1),
+        Predmet('fizika', 2)
+    ]
+)
 
-    
+# Ustvari funkcijo ki naredi dovolj ur za en dan od 8ih do 20ih npr
+# Razmisli ali je bolje dodati se en class Dan za organizacijo ur
+
+for i in primer.ure:
+    print(i)
+
+print('\n')
+primer.ure[0].spremeni_stopnjo_zasedenosti(0)
+
+for i in primer.ure:
+    print(i)
 
 
 
