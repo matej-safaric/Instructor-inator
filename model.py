@@ -94,7 +94,7 @@ primer = Root(
     ]
 )
 
-# Ustvari funkcijo ki naredi dovolj ur za en dan od 8ih do 20ih npr
+# Ustvari funkcijo ki naredi dovolj ur za en dan od 8ih do 20ih npr         X
 # Razmisli ali je bolje dodati se en class Dan za organizacijo ur   NE
 # Podatki naj se sproti shranjujejo na zunanji file ki se prebere ob zagonu programa
 
