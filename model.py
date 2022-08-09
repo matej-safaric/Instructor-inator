@@ -73,7 +73,7 @@ class INS:
     predmeti: List[Predmet]
 
     def ustvari_dan_praznih_ur(self, datum:date):
-        for i in range(1, 20):
+        for i in range(8, 20):
             self.ure.append(Ura(datetime(datum[0], datum[1], datum[2], i ), 0, None, None))
             
 
