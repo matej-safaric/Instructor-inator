@@ -1,0 +1,1 @@
+datetime(2022, 8, 9, 8), 2, Predmet('fizika', 2), Uporabnik(('Alfi', 'Snific'), 'Ucko', '4321', 2, False
