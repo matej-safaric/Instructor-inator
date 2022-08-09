@@ -3,7 +3,7 @@
 #
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date, datetime
 from typing import List
 
 
@@ -65,9 +65,9 @@ class Ura:
         self.predmet = predmet
         self.ucenec = ucenec
 
-        
+
 @dataclass
-class INS:
+class Root:
     ure: List[Ura]
     uporabniki: List[Uporabnik]
     predmeti: List[Predmet]
@@ -81,7 +81,8 @@ class INS:
 primer = Root(
     [
         Ura(datetime.now(), 1, Predmet('matematika', 1), Uporabnik(('Safaric', 'Matej'), 'Prof', '1234', 1, True)),
-        Ura(datetime(2022, 8, 9, 8), 1, Predmet('fizika', 2), Uporabnik(('Alfi', 'Snific'), 'Ucko', '4321', 2, False))
+        Ura(datetime(2022, 8, 9, 8), 2, Predmet('fizika', 2), Uporabnik(('Alfi', 'Snific'), 'Ucko', '4321', 2, False)),
+        Ura(datetime.now(), 0, None, None)
     ],
     [
         Uporabnik(('Safaric', 'Matej'), 'Prof', '1234', 1, True),
@@ -94,13 +95,20 @@ primer = Root(
 )
 
 # Ustvari funkcijo ki naredi dovolj ur za en dan od 8ih do 20ih npr
-# Razmisli ali je bolje dodati se en class Dan za organizacijo ur
+# Razmisli ali je bolje dodati se en class Dan za organizacijo ur   NE
+# Podatki naj se sproti shranjujejo na zunanji file ki se prebere ob zagonu programa
 
 for i in primer.ure:
     print(i)
 
 print('\n')
-primer.ure[0].spremeni_stopnjo_zasedenosti(0)
+primer.ure[1].pocisti()
+
+for i in primer.ure:
+    print(i)
+
+print('\n')
+primer.ustvari_dan_praznih_ur((2022,8,9))
 
 for i in primer.ure:
     print(i)
