@@ -72,8 +72,13 @@ class INS:
     uporabniki: List[Uporabnik]
     predmeti: List[Predmet]
 
+    def ustvari_dan_praznih_ur(self, datum:date):
+        for i in range(1, 20):
+            self.ure.append(Ura(datetime(datum[0], datum[1], datum[2], i ), 0, None, None))
+            
+
     
-primer = INS(
+primer = Root(
     [
         Ura(datetime.now(), 1, Predmet('matematika', 1), Uporabnik(('Safaric', 'Matej'), 'Prof', '1234', 1, True)),
         Ura(datetime(2022, 8, 9, 8), 1, Predmet('fizika', 2), Uporabnik(('Alfi', 'Snific'), 'Ucko', '4321', 2, False))
