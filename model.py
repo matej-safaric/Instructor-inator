@@ -51,9 +51,21 @@ class Ura:
         else:
             return f'{self.cas}: {self.predmet.ime} {self.predmet.stopnja} - {self.ucenec.ime_priimek[1]} {self.ucenec.ime_priimek[0]}'
 
-    def spremeni_stopnjo_zasedenosti(self, stopnja):
-        self.stopnja_zasedenosti = stopnja
+    def pocisti(self):
+        self.stopnja_zasedenosti = 0
+        self.predmet = None
+        self.ucenec = None
 
+        
+    def razpolozi(self):
+        self.stopnja_zasedenosti = 1
+
+    def rezerviraj(self, predmet:Predmet, ucenec:Uporabnik):
+        self.stopnja_zasedenosti = 2
+        self.predmet = predmet
+        self.ucenec = ucenec
+
+        
 @dataclass
 class INS:
     ure: List[Ura]
