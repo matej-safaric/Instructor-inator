@@ -94,23 +94,16 @@ primer = Root(
     ]
 )
 
-# Ustvari funkcijo ki naredi dovolj ur za en dan od 8ih do 20ih npr         X
-# Razmisli ali je bolje dodati se en class Dan za organizacijo ur   NE
-# Podatki naj se sproti shranjujejo na zunanji file ki se prebere ob zagonu programa
-
-for i in primer.ure:
+for i in primer.uporabniki:
     print(i)
 
 print('\n')
-primer.ure[1].pocisti()
+primer.ustvari_predmet('zgodovina', 0)
+primer.ustvari_uporabnika('marko', 'bobek', 'mbomba', 'bumbum', False)
 
-for i in primer.ure:
-    print(i)
 
-print('\n')
-primer.ustvari_dan_praznih_ur((2022,8,9))
 
-for i in primer.ure:
+for i in primer.uporabniki:
     print(i)
 
 
