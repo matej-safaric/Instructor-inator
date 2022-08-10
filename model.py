@@ -27,6 +27,7 @@ class Uporabnik:
 class Predmet:
     ime: str
     stopnja: int
+    id: int
     #0 - OŠ
     #1 - SŠ
     #2 - FK
@@ -42,6 +43,7 @@ class Ura:
     #   3 - ura je opravljena/izvedena ????
     predmet: Predmet
     ucenec: Uporabnik #ID stevilka ucencu prirejenega racuna
+    id: int
 
     def __str__(self):
         if self.stopnja_zasedenosti == 0:
@@ -72,10 +74,52 @@ class Root:
     uporabniki: List[Uporabnik]
     predmeti: List[Predmet]
 
+    def ustvari_prazno_uro(self, cas:datetime):
+        zadnji_id = self.uporabniki[-1].id
+        self.uporabniki.append(Ura(cas, 0, None, None, zadnji_id + 1))
+        with open('uporabniki.txt', 'a', encoding='UTF-8') as dat:
+            dat.write(f'{cas.isoformat()};{0};{None};{None};{zadnji_id + 1}\n')
+
+
     def ustvari_dan_praznih_ur(self, datum:date):
-        for i in range(8, 20):
-            self.ure.append(Ura(datetime(datum[0], datum[1], datum[2], i ), 0, None, None))
+        zadnji_id = self.uporabniki[-1].id
+        with open('uporabniki.txt', 'a', encoding='UTF-8') as dat:
+            for i in range(8, 20):
+                pretvorba_v_datetime = datetime(datum.year, datum.month, datum.day, i )
+                self.uporabniki.append(Ura((pretvorba_v_datetime), 0, None, None, zadnji_id + i - 7))
+                dat.write(f'{pretvorba_v_datetime.isoformat()};{0};{None};{None};{zadnji_id + i - 7}\n')
+
+    def ustvari_uporabnika(self, ime:str, priimek:str, username:str, password:str, instruktor_bool:bool):
+        zadnji_id = self.uporabniki[-1].id
+        self.uporabniki.append(Uporabnik((priimek, ime), username, password, zadnji_id + 1, instruktor_bool))
+        with open('uporabniki.txt', 'a', encoding='UTF-8') as dat:
+            dat.write(f'{priimek};{ime};{username};{password};{zadnji_id + 1};{instruktor_bool}\n')
+
+    def ustvari_predmet(self, ime:str, stopnja:int):
+        zadnji_id = self.predmeti[-1].id
+        self.predmeti.append(Predmet(ime, stopnja, zadnji_id + 1))
+        with open('predmeti.txt', 'a', encoding='UTF-8') as dat:
+            dat.write(f'{ime};{stopnja};{zadnji_id + 1}\n')
             
+    def najdi_uporabnika(self, id):
+        for uporabnik in self.uporabniki:
+            if uporabnik.id == id:
+                return uporabnik
+
+    def najdi_predmet(self, id):
+        for predmet in self.predmeti:
+            if predmet.id == id:
+                return predmet    
+
+    def najdi_uro(self, id):
+        for ura in self.uporabniki:
+            if ura.id == id:
+                return ura 
+    
+
+# Ustvari funkcijo ki naredi dovolj ur za en dan od 8ih do 20ih npr         X
+# Razmisli ali je bolje dodati se en class Dan za organizacijo ur   NE
+
 
     
 primer = Root(
