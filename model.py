@@ -80,17 +80,17 @@ class Root:
     
 primer = Root(
     [
-        Ura(datetime.now(), 1, Predmet('matematika', 1), Uporabnik(('Safaric', 'Matej'), 'Prof', '1234', 1, True)),
-        Ura(datetime(2022, 8, 9, 8), 2, Predmet('fizika', 2), Uporabnik(('Alfi', 'Snific'), 'Ucko', '4321', 2, False)),
-        Ura(datetime.now(), 0, None, None)
+        Ura(datetime(1, 1, 1, 9), 1, Predmet('matematika', 1, 1), Uporabnik(('Safaric', 'Matej'), 'Prof', '1234', 1, True), 1),
+        Ura(datetime(2022, 8, 9, 8), 2, Predmet('fizika', 2, 2), Uporabnik(('Alfi', 'Snific'), 'Ucko', '4321', 2, False), 2),
+        Ura(datetime(1, 1, 1, 10), 0, None, None, 3)
     ],
     [
         Uporabnik(('Safaric', 'Matej'), 'Prof', '1234', 1, True),
         Uporabnik(('Alfi', 'Snific'), 'Ucko', '4321', 2, False)
     ],
     [
-        Predmet('matematika', 1),
-        Predmet('fizika', 2)
+        Predmet('matematika', 1, 1),
+        Predmet('fizika', 2, 2)
     ]
 )
 
