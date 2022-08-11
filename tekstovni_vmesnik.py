@@ -1,4 +1,5 @@
 import model
+from datetime import datetime
 
 root = model.Root([],[],[])
 def nalozi_datoteke():
@@ -9,18 +10,18 @@ def nalozi_datoteke():
     with open('predmeti.txt', encoding='UTF-8') as dat:
         for vrstica in dat:
             atributi = vrstica.strip().split(';')
-            root.predmeti.append(model.Predmet(atributi[0], int(atributi[1])))
+            root.predmeti.append(model.Predmet(atributi[0], int(atributi[1]), int(atributi[2])))
     with open('ure.txt', encoding='UTF-8') as dat:
         for vrstica in dat:
             atributi = vrstica.strip().split(';')
-            root.ure.append(model.Ura())
+            root.ure.append(model.Ura(datetime.fromisoformat(atributi[0]), int(atributi[1]), root.najdi_predmet(atributi[2]), root.najdi_uporabnika(atributi[3]), int(atributi[4])))
 
-nalozi_datoteke()
+def dobrodoslica():
+    print('Dobrodošli v Instructor-inator!\n')
 
-for i in root.uporabniki:
-    print(i)
 
-#def tekstovni_vmesnik():
-#    nalozi_datoteke()
-#    dobrodoslica()
+def tekstovni_vmesnik():
+    nalozi_datoteke()
+    dobrodoslica()
+
 
