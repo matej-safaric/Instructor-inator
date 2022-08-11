@@ -19,6 +19,18 @@ def nalozi_datoteke():
 def dobrodoslica():
     print('Dobrodošli v Instructor-inator!\n')
 
+def izbira_ukaza(ukazi: list):
+    print('Kaj želite storiti?')
+    for (i, ukaz) in enumerate(ukazi):
+        print(f'{i + 1}) {ukaz[0]}')
+    izbira = input('> ')
+    while izbira not in [str(i) for i in range(1, len(ukazi) + 1)]:
+        print(f'Vnesite število med 1 in {len(ukazi)}')
+        izbira = input('> ')
+    return ukazi[int(izbira) - 1][1]
+        
+    
+
 
 def tekstovni_vmesnik():
     nalozi_datoteke()
