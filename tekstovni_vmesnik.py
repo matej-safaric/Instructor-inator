@@ -1,9 +1,8 @@
 import model
 from datetime import datetime
 
-nekdo_je_prijavljen: bool
 
-root = model.Root([],[],[])
+root = model.Root([],[],[], False)
 def nalozi_datoteke():
     with open('uporabniki.txt', encoding='UTF-8') as dat:
         for vrstica in dat:
@@ -30,37 +29,37 @@ def izbira_ukaza(ukazi: list):
         izbira = input('> ')
     return ukazi[int(izbira) - 1][1]
 
-def homepage_neprijavljen(nekdo_je_prijavljen):
+def homepage_neprijavljen():
     print('HOMEPAGE')
     print('Kaj želite storiti')
-    izbira_ukaza([('Prijava', prijava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek)])(nekdo_je_prijavljen)
+    izbira_ukaza([('Prijava', prijava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek)])()
 
-def homepage_prijavljen(nekdo_je_prijavljen):
+def homepage_prijavljen():
     print('HOMEPAGE')
     print('Kaj želite storiti')
-    izbira_ukaza([('Odjava', odjava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek)])(nekdo_je_prijavljen)
+    izbira_ukaza([('Odjava', odjava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek)])()
 
-def prijava_instruktor(nekdo_je_prijavljen):
+def prijava_instruktor():
     username = input('Vnesite svoj username. Če želite prekiniti postopek prijave vpišite "/back"\n > ')
     if username != '/back':
         password = input('Vnesite svoje geslo\n > ')
         if root.preveri_prijavo(username, password)[0] == None:
             print('Ta račun ne obstaja.') #ustvari nov racun ali poskusi ponovno ali nazaj
-            prijava(nekdo_je_prijavljen)
+            prijava()
         elif not root.preveri_prijavo(username, password)[0].instruktor:
             print('Tu se lahko prijavijo samo inštruktorji\n') #prijava za ucence ali prijava za instruktorje ali nazaj 
-            prijava(nekdo_je_prijavljen)
+            prijava()
         elif not root.preveri_prijavo(username, password)[1]:
             print('Napačno geslo.\n') #poskusi ponovno ali nazaj 
-            prijava_instruktor(nekdo_je_prijavljen)
+            prijava_instruktor()
         elif root.preveri_prijavo(username, password)[1]:
             print('Prijava uspešna\n')  #Ponudi moznost Ustvari nov racun
-            nekdo_je_prijavljen = True
-            homepage_prijavljen(nekdo_je_prijavljen)
+            root.prijavljenost = True
+            homepage_prijavljen()
 
 #DODAJ ATRIBUT .prijavljen v uporabnike
 
-def prijava_ucenec(nekdo_je_prijavljen):
+def prijava_ucenec():
     username = input('Vnesite svoj username. Če želite prekiniti postopek prijave vpišite "/back"\n > ')
     if username != '/back':
         password = input('Vnesite svoje geslo\n > ')
@@ -75,15 +74,15 @@ def prijava_ucenec(nekdo_je_prijavljen):
             prijava_ucenec()
         elif root.preveri_prijavo(username, password)[1]:
             print('Prijava uspešna\n')
-            nekdo_je_prijavljen = True
-            homepage_prijavljen(nekdo_je_prijavljen)
+            root.prijavljenost = True
+            homepage_prijavljen()
 
-def odjava(nekdo_je_prijavljen):
-    nekdo_je_prijavljen = False
+def odjava():
+    root.prijavljenost = False
     print('Odjava je bila uspešna.')
-    homepage_neprijavljen(nekdo_je_prijavljen)
+    homepage_neprijavljen()
 
-def ustvari_nov_racun(nekdo_je_prijavljen):
+def ustvari_nov_racun():
     ime = input('Vpišite svoje ime\nČe želite prekiniti postopek registracije vpišite "/back"\n > ')
     if ime != '/back':
         priimek = input('Vpišite svoj priimek\n > ')
@@ -106,30 +105,29 @@ def ustvari_nov_racun(nekdo_je_prijavljen):
                     dat.write(f'{priimek};{ime};{username};{password};{root.najdi_uporabnika_username(username).id};\n')
 
 
-def ogled_urnika(nekdo_je_prijavljen):
+def ogled_urnika():
     pass
 
-def zakljucek(nekdo_je_prijavljen):
+def zakljucek():
     exit()
 
 
-def prijava(nekdo_je_prijavljen):
-    if nekdo_je_prijavljen:
+def prijava():
+    if root.prijavljenost:
         print('Nekdo je že prijavljen v sistem. Prosimo, da se najprej odjavite iz trenutnega računa')
         homepage_prijavljen()
     else:
-        izbira_ukaza([('Prijava za inštruktorje', prijava_instruktor),('Prijava za učence', prijava_ucenec),('Ustvari nov račun', ustvari_nov_racun),('Nazaj', homepage_neprijavljen)])(nekdo_je_prijavljen)
+        izbira_ukaza([('Prijava za inštruktorje', prijava_instruktor),('Prijava za učence', prijava_ucenec),('Ustvari nov račun', ustvari_nov_racun),('Nazaj', homepage_neprijavljen)])()
 
 
 def tekstovni_vmesnik():
     nalozi_datoteke()
-    nekdo_je_prijavljen = False
     dobrodoslica()
     while True:
-        if nekdo_je_prijavljen:
-            homepage_prijavljen(nekdo_je_prijavljen)
+        if root.prijavljenost:
+            homepage_prijavljen()
         else:
-            homepage_neprijavljen(nekdo_je_prijavljen)
+            homepage_neprijavljen()
 
 
 tekstovni_vmesnik()
