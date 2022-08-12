@@ -90,18 +90,18 @@ class Root:
     predmeti: List[Predmet]
 
     def ustvari_prazno_uro(self, cas:datetime):
-        zadnji_id = self.uporabniki[-1].id
-        self.uporabniki.append(Ura(cas, 0, None, None, zadnji_id + 1))
-        with open('uporabniki.txt', 'a', encoding='UTF-8') as dat:
+        zadnji_id = self.ure[-1].id
+        self.ure.append(Ura(cas, 0, None, None, zadnji_id + 1))
+        with open('ure.txt', 'a', encoding='UTF-8') as dat:
             dat.write(f'{cas.isoformat()};{0};{None};{None};{zadnji_id + 1}\n')
 
 
     def ustvari_dan_praznih_ur(self, datum:date):
-        zadnji_id = self.uporabniki[-1].id
-        with open('uporabniki.txt', 'a', encoding='UTF-8') as dat:
+        zadnji_id = self.ure[-1].id
+        with open('ure.txt', 'a', encoding='UTF-8') as dat:
             for i in range(8, 20):
                 pretvorba_v_datetime = datetime(datum.year, datum.month, datum.day, i )
-                self.uporabniki.append(Ura((pretvorba_v_datetime), 0, None, None, zadnji_id + i - 7))
+                self.ure.append(Ura((pretvorba_v_datetime), 0, None, None, zadnji_id + i - 7))
                 dat.write(f'{pretvorba_v_datetime.isoformat()};{0};{None};{None};{zadnji_id + i - 7}\n')
 
     def ustvari_uporabnika(self, ime:str, priimek:str, username:str, password:str, instruktor_bool:bool):
@@ -127,7 +127,7 @@ class Root:
                 return predmet    
 
     def najdi_uro(self, id):
-        for ura in self.uporabniki:
+        for ura in self.ure:
             if ura.id == id:
                 return ura 
     
