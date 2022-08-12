@@ -6,7 +6,7 @@ def nalozi_datoteke():
     with open('uporabniki.txt', encoding='UTF-8') as dat:
         for vrstica in dat:
             atributi = vrstica.strip().split(';')
-            root.uporabniki.append(model.Uporabnik((atributi[0], atributi[1]), atributi[2], atributi[3], int(atributi[4]), bool(atributi[5])))
+            root.uporabniki.append(model.Uporabnik((atributi[0], atributi[1]), atributi[2], atributi[3], int(atributi[4]), True if atributi[5] == 'True' else False))
     with open('predmeti.txt', encoding='UTF-8') as dat:
         for vrstica in dat:
             atributi = vrstica.strip().split(';')
