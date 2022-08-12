@@ -149,35 +149,59 @@ class Root:
 # Ustvari funkcijo ki naredi dovolj ur za en dan od 8ih do 20ih npr         X
 # Razmisli ali je bolje dodati se en class Dan za organizacijo ur   NE
 
+# Podatki naj se sproti shranjujejo na zunanji file ki se prebere ob zagonu programa
+# V funkciji za ustvarjanje novih ur dodaj shranjevanje ur v zunanji .txt file      X
+# Razmisli/naredi enako za uporabnike in predmete
+# Nadaljuj z implementacijo log-in in uporabe id-jev
+# Koncaj metodo find(id)        X
 
-    
-primer = Root(
-    [
-        Ura(datetime(1, 1, 1, 9), 1, Predmet('matematika', 1, 1), Uporabnik(('Safaric', 'Matej'), 'Prof', '1234', 1, True), 1),
-        Ura(datetime(2022, 8, 9, 8), 2, Predmet('fizika', 2, 2), Uporabnik(('Alfi', 'Snific'), 'Ucko', '4321', 2, False), 2),
-        Ura(datetime(1, 1, 1, 10), 0, None, None, 3)
-    ],
-    [
-        Uporabnik(('Safaric', 'Matej'), 'Prof', '1234', 1, True),
-        Uporabnik(('Alfi', 'Snific'), 'Ucko', '4321', 2, False)
-    ],
-    [
-        Predmet('matematika', 1, 1),
-        Predmet('fizika', 2, 2)
-    ]
-)
+# Podatki se morajo sproti shranjevati ker bo v nasprotnem primeru ob crashu vse novo izgubljeno!!!
+# Ko spremenis atribut objekta se mora spremeniti tudi zapis v txt file-u
+# PAZI NA ID stevilke ker se zacnejo z 1
 
-for i in primer.uporabniki:
-    print(i)
+#Preden s podatkom kaj naredis, preveri ali sploh obstaja v txt.file-u / root-u
 
-print('\n')
-primer.ustvari_predmet('zgodovina', 0)
-primer.ustvari_uporabnika('marko', 'bobek', 'mbomba', 'bumbum', False)
+# primer = Root(    
+#     [
+#         Ura(datetime(1, 1, 1, 9), 1, Predmet('matematika', 1, 1), Uporabnik(('Safaric', 'Matej'), 'Prof', '1234', 1, True), 1),
+#         Ura(datetime(2022, 8, 9, 8), 2, Predmet('fizika', 2, 2), Uporabnik(('Alfi', 'Snific'), 'Ucko', '4321', 2, False), 2),
+#         Ura(datetime(1, 1, 1, 10), 0, None, None, 3)
+#     ],
+#     [
+#         Uporabnik(('Safaric', 'Matej'), 'Prof', '1234', 1, True),
+#         Uporabnik(('Alfi', 'Snific'), 'Ucko', '4321', 2, False)
+#     ],
+#     [
+#         Predmet('matematika', 1, 1),
+#         Predmet('fizika', 2, 2)
+#     ]
+# )
+
+# primer = Root(
+#     [
+#         Ura(datetime(1, 1, 1, 9), 1, Predmet('matematika', 1, 1), Uporabnik(('Safaric', 'Matej'), 'Prof', '1234', 1, True), 1)
+#     ],
+#     [
+#         Uporabnik(('Safaric', 'Matej'), 'Prof', '1234', 1, True)
+#     ],
+#     [
+#         Predmet('matematika', 1, 1)
+#     ]
+#     )
+
+# for i in primer.ure:
+#     print(i)
+
+# print('\n')
+# primer.ustvari_dan_praznih_ur(date(2022,12,25))
+# print('\n')
+# primer.najdi_uro(1).pocisti()
+# print('\n')
 
 
 
-for i in primer.uporabniki:
-    print(i)
+# for i in primer.ure:
+#     print(i)
 
 
 
