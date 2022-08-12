@@ -14,7 +14,7 @@ def nalozi_datoteke():
     with open('ure.txt', encoding='UTF-8') as dat:
         for vrstica in dat:
             atributi = vrstica.strip().split(';')
-            root.ure.append(model.Ura(datetime.fromisoformat(atributi[0]), int(atributi[1]), root.najdi_predmet(atributi[2]), root.najdi_uporabnika(atributi[3]), int(atributi[4])))
+            root.ure.append(model.Ura(datetime.fromisoformat(atributi[0]), int(atributi[1]), root.najdi_predmet(atributi[2]), root.najdi_uporabnika_id(atributi[3]), int(atributi[4])))
 
 def dobrodoslica():
     print('Dobrodošli v Instructor-inator!\n')

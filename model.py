@@ -116,7 +116,7 @@ class Root:
         with open('predmeti.txt', 'a', encoding='UTF-8') as dat:
             dat.write(f'{ime};{stopnja};{zadnji_id + 1}\n')
             
-    def najdi_uporabnika(self, id):
+    def najdi_uporabnika_id(self, id):
         for uporabnik in self.uporabniki:
             if uporabnik.id == id:
                 return uporabnik
