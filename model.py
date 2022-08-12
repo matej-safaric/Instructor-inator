@@ -121,6 +121,15 @@ class Root:
             if uporabnik.id == id:
                 return uporabnik
 
+    def preveri_prijavo(self, username, password):
+        for uporabnik in self.uporabniki:
+            if uporabnik.username == username:
+                if uporabnik.password == password:
+                    return (uporabnik, True)
+                else:
+                    return (uporabnik, False)
+        return (None, False)
+
     def najdi_predmet(self, id):
         for predmet in self.predmeti:
             if predmet.id == id:
