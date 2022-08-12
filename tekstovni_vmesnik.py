@@ -20,7 +20,6 @@ def dobrodoslica():
     print('Dobrodošli v Instructor-inator!\n')
 
 def izbira_ukaza(ukazi: list):
-    print('Kaj želite storiti?')
     for (i, ukaz) in enumerate(ukazi):
         print(f'{i + 1}) {ukaz[0]}')
     izbira = input('> ')
