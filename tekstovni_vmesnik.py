@@ -82,7 +82,26 @@ def odjava(nekdo_je_prijavljen):
     homepage_neprijavljen(nekdo_je_prijavljen)
 
 def ustvari_nov_racun(nekdo_je_prijavljen):
-    pass    
+    ime = input('Vpišite svoje ime\nČe želite prekiniti postopek registracije vpišite "/back"\n > ')
+    if ime != '/back':
+        priimek = input('Vpišite svoj priimek\n > ')
+        username = input('Vpišite željeno uporabniško ime\n > ')
+        if username == '/back':
+            print('To uporabniško ime ni dovoljeno. Prosimo poskusite znova.')
+            ustvari_nov_racun()
+        else:
+            for uporabnik in root.uporabniki:
+                if username == uporabnik.username:
+                    print('To uporabniško ime je že zasedeno. Prosimo poskusite znova.')
+                    ustvari_nov_racun()
+            password = input('Vpišite željeno geslo\n > ')
+            print('Ali ste učenec ali inštruktor?')
+            instruktor = izbira_ukaza([('Inštruktor', True), ('Učenec', False)])
+            root.ustvari_uporabnika(ime, priimek, username, password, False)
+            if instruktor:
+                print('Vaš inštruktorski račun je na čakanju dokler osebno ne preverimo vaših podatkov. Do takrat lahko račun uporabljate le kot učenec')
+                with open('stand-by_instruktorji.txt', 'a', encoding='UTF-8') as dat:
+                    dat.write(f'{priimek};{ime};{username};{password};{root.najdi_uporabnika_username(username).id};\n')
 
 def nazaj():
     pass
