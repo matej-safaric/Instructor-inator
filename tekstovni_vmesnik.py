@@ -28,6 +28,15 @@ def izbira_ukaza(ukazi: list):
         izbira = input('> ')
     return ukazi[int(izbira) - 1][1]
         
+def homepage_neprijavljen(nekdo_je_prijavljen):
+    print('HOMEPAGE')
+    print('Kaj želite storiti')
+    izbira_ukaza([('Prijava', prijava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek)])(nekdo_je_prijavljen)
+
+def homepage_prijavljen(nekdo_je_prijavljen):
+    print('HOMEPAGE')
+    print('Kaj želite storiti')
+    izbira_ukaza([('Odjava', odjava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek)])(nekdo_je_prijavljen)
     
 def prijava_instruktor(nekdo_je_prijavljen):
     username = input('Vnesite svoj username. Če želite prekiniti postopek prijave vpišite "/back"\n > ')
