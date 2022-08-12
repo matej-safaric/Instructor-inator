@@ -1,1 +1,2 @@
 Safaric;Matej;Prof;1234;1;True
+bobek;marko;mbomba;bumbum;2;False
