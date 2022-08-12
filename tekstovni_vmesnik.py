@@ -1,6 +1,8 @@
 import model
 from datetime import datetime
 
+nekdo_je_prijavljen: bool
+
 root = model.Root([],[],[])
 def nalozi_datoteke():
     with open('uporabniki.txt', encoding='UTF-8') as dat:
@@ -27,7 +29,7 @@ def izbira_ukaza(ukazi: list):
         print(f'Vnesite število med 1 in {len(ukazi)}')
         izbira = input('> ')
     return ukazi[int(izbira) - 1][1]
-        
+
 def homepage_neprijavljen(nekdo_je_prijavljen):
     print('HOMEPAGE')
     print('Kaj želite storiti')
@@ -37,7 +39,7 @@ def homepage_prijavljen(nekdo_je_prijavljen):
     print('HOMEPAGE')
     print('Kaj želite storiti')
     izbira_ukaza([('Odjava', odjava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek)])(nekdo_je_prijavljen)
-    
+
 def prijava_instruktor(nekdo_je_prijavljen):
     username = input('Vnesite svoj username. Če želite prekiniti postopek prijave vpišite "/back"\n > ')
     if username != '/back':
@@ -103,14 +105,12 @@ def ustvari_nov_racun(nekdo_je_prijavljen):
                 with open('stand-by_instruktorji.txt', 'a', encoding='UTF-8') as dat:
                     dat.write(f'{priimek};{ime};{username};{password};{root.najdi_uporabnika_username(username).id};\n')
 
-def nazaj():
-    pass
 
 def ogled_urnika(nekdo_je_prijavljen):
     pass
 
 def zakljucek(nekdo_je_prijavljen):
-    pass
+    exit()
 
 
 def prijava(nekdo_je_prijavljen):
@@ -118,11 +118,18 @@ def prijava(nekdo_je_prijavljen):
         print('Nekdo je že prijavljen v sistem. Prosimo, da se najprej odjavite iz trenutnega računa')
         homepage_prijavljen()
     else:
-        izbira_ukaza([('Prijava za inštruktorje', prijava_instruktor),('Prijava za učence', prijava_ucenec),('Ustvari nov račun', ustvari_nov_racun),('Nazaj', nazaj)])(nekdo_je_prijavljen)
+        izbira_ukaza([('Prijava za inštruktorje', prijava_instruktor),('Prijava za učence', prijava_ucenec),('Ustvari nov račun', ustvari_nov_racun),('Nazaj', homepage_neprijavljen)])(nekdo_je_prijavljen)
 
 
 def tekstovni_vmesnik():
     nalozi_datoteke()
+    nekdo_je_prijavljen = False
     dobrodoslica()
+    while True:
+        if nekdo_je_prijavljen:
+            homepage_prijavljen(nekdo_je_prijavljen)
+        else:
+            homepage_neprijavljen(nekdo_je_prijavljen)
 
 
+tekstovni_vmesnik()
