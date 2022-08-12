@@ -57,15 +57,30 @@ class Ura:
         self.stopnja_zasedenosti = 0
         self.predmet = None
         self.ucenec = None
+        with open('ure.txt', 'r', encoding='UTF-8') as dat:
+            vrstice = dat.readlines()
+        with open('ure.txt', 'w', encoding='UTF-8') as dat:
+            vrstice[self.id - 1] = f'{self.cas.isoformat()};0;None;None;{self.id}\n'
+            dat.writelines(vrstice)
 
         
     def razpolozi(self):
         self.stopnja_zasedenosti = 1
+        with open('ure.txt', 'r', encoding='UTF-8') as dat:
+            vrstice = dat.readlines()
+        with open('ure.txt', 'w', encoding='UTF-8') as dat:
+            vrstice[self.id - 1] = f'{self.cas.isoformat()};1;{self.predmet.id};{self.ucenec.id};{self.id}\n'               #DODAJ PREVERJANJE ALI JE URA ZAPISANA V TXT FILE-U
+            dat.writelines(vrstice)                                                                       #
 
     def rezerviraj(self, predmet:Predmet, ucenec:Uporabnik):
         self.stopnja_zasedenosti = 2
         self.predmet = predmet
         self.ucenec = ucenec
+        with open('ure.txt', 'r', encoding='UTF-8') as dat:
+            vrstice = dat.readlines()
+        with open('ure.txt', 'w', encoding='UTF-8') as dat:
+            vrstice[self.id - 1] = f'{self.cas.isoformat()};2;{self.predmet.id};{self.ucenec.id};{self.id}\n'
+            dat.writelines(vrstice)
 
 
 @dataclass
