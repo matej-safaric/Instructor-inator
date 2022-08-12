@@ -88,6 +88,7 @@ class Root:
     ure: List[Ura]
     uporabniki: List[Uporabnik]
     predmeti: List[Predmet]
+    prijavljenost: bool
 
     def ustvari_prazno_uro(self, cas:datetime):
         zadnji_id = self.ure[-1].id
