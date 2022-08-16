@@ -95,18 +95,64 @@ def ustvari_nov_racun():
                 if username == uporabnik.username:
                     print('To uporabniško ime je že zasedeno. Prosimo poskusite znova.')
                     ustvari_nov_racun()
-            password = input('Vpišite željeno geslo\n > ')
-            print('Ali ste učenec ali inštruktor?')
-            instruktor = izbira_ukaza([('Inštruktor', True), ('Učenec', False)])
-            root.ustvari_uporabnika(ime, priimek, username, password, False)
-            if instruktor:
-                print('Vaš inštruktorski račun je na čakanju dokler osebno ne preverimo vaših podatkov. Do takrat lahko račun uporabljate le kot učenec')
-                with open('stand-by_instruktorji.txt', 'a', encoding='UTF-8') as dat:
-                    dat.write(f'{priimek};{ime};{username};{password};{root.najdi_uporabnika_username(username).id};\n')
+                password = input('Vpišite željeno geslo\n > ')
+                print('Ali ste učenec ali inštruktor?')
+                instruktor = izbira_ukaza([('Inštruktor', True), ('Učenec', False)])
+                root.ustvari_uporabnika(ime, priimek, username, password, False)
+                if instruktor:
+                    print('Vaš inštruktorski račun je na čakanju dokler osebno ne preverimo vaših podatkov. Do takrat lahko račun uporabljate le kot učenec')
+                    with open('stand-by_instruktorji.txt', 'a', encoding='UTF-8') as dat:
+                        dat.write(f'{priimek};{ime};{username};{password};{root.najdi_uporabnika_username(username).id}\n')
+                else:
+                    print('Račun je bil uspešno ustvarjen. Sedaj se lahko prijavite v sistem.')
+                    homepage_neprijavljen()
 
 
 def ogled_urnika():
-    pass
+    danes = datetime.today()
+
+def potrdi_zavrni_instruktorja(uporabnik: model.Uporabnik or None):
+    if uporabnik == None:
+        homepage_prijavljen_instruktor()
+    else:
+        potrditev_ali_zavrnitev = input(f'Ali želite, da se uporabnik {uporabnik.ime_priimek[1].upper()} {uporabnik.ime_priimek[0].upper()} doda v seznam inštruktorjev? \n Vpišite DA za potrditev in NE za zavrnitev \n > ')
+        if potrditev_ali_zavrnitev not in ['DA', 'NE']:
+            print('Vpisati morate ali DA ali NE')
+            potrdi_zavrni_instruktorja(uporabnik)
+        elif potrditev_ali_zavrnitev == 'DA':
+            uporabnik.instruktor = True             #DODAJ brisanje uporabnika iz seznama morebitnih instruktorjev!!!
+            with open('stand-by_instruktorji.txt', encoding='UTF-8') as dat:
+                vrstice = dat.readlines()
+            with open('stand-by_instruktorji.txt', 'w', encoding='UTF-8') as dat:
+                for vrstica in vrstice:
+                    if vrstica.strip() != f'{uporabnik.ime_priimek[0]};{uporabnik.ime_priimek[1]};{uporabnik.username};{uporabnik.password};{uporabnik.id}':
+                        dat.write(vrstica)
+            
+            with open('uporabniki.txt', encoding='UTF-8') as dat:
+                vrstice = dat.readlines()
+            with open('uporabniki.txt', 'w', encoding='UTF-8') as dat:
+                for vrstica in vrstice:
+                    if f'{uporabnik.ime_priimek[0]};{uporabnik.ime_priimek[1]};{uporabnik.username};{uporabnik.password};{uporabnik.id}' in vrstica.strip():
+                        dat.write(vrstica)
+                    else:
+                        dat.write(f'{uporabnik.ime_priimek[0]};{uporabnik.ime_priimek[1]};{uporabnik.username};{uporabnik.password};{uporabnik.id};True\n')
+
+            print('Sprejeto!')
+        else:                                       #DODAJ txt file AKTIVNOST PROGRAMA.txt ki prepreci prijavo ce nekdo odpre se eno okno s programom
+            uporabnik.instruktor = False
+            with open('stand-by_instruktorji.txt', encoding='UTF-8') as dat:
+                vrstice = dat.readlines()
+            with open('stand-by_instruktorji.txt', 'w', encoding='UTF-8') as dat:
+                for vrstica in vrstice:
+                    if vrstica.strip() != f'{uporabnik.ime_priimek[0]};{uporabnik.ime_priimek[1]};{uporabnik.username};{uporabnik.password};{uporabnik.id}':
+                        dat.write(vrstica)
+            print('Uspešno zavrnjeno!')
+
+def morebitni_instruktorji():
+    with open('stand-by_instruktorji.txt', encoding='UTF-8') as dat:
+        vrstice = dat.readlines()
+    izbira = izbira_ukaza([(f'{vrstica.strip().split(";")[1]} {vrstica.strip().split(";")[0]}', root.najdi_uporabnika_id(int(vrstica.strip().split(";")[-1]))) for vrstica in vrstice] + [('Nazaj', None)])
+    potrdi_zavrni_instruktorja(izbira)
 
 def zakljucek():
     exit()
