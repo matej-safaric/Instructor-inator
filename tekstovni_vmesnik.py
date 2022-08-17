@@ -108,8 +108,12 @@ def ustvari_nov_racun():
                     homepage_neprijavljen()
 
 
+def natisni_urnik():
+    pass
+
 def ogled_urnika():
-    danes = datetime.today()
+    natisni_urnik()
+    izbira_ukaza([('Rezerviraj uro', rezervacija), ('Prikaži moje ure', prikaz_osebnih_ur), ('Odpovej uro', odpoved), ('Nazaj', nazaj), ('Naslednji teden', naslednji_teden), ('Prejšnji teden', prejsnji_teden)])()
 
 def potrdi_zavrni_instruktorja(uporabnik: model.Uporabnik or None):
     if uporabnik == None:
