@@ -32,6 +32,12 @@ class Predmet:
     #1 - SŠ
     #2 - FK
     
+    def __str__(self):
+        moznosti = [(0, 'OŠ'),(1, 'SŠ'),(2, 'FK')]
+        for (stopnja, ime_stopnje) in moznosti:
+            if self.stopnja == stopnja:
+                return f'{self.ime} {ime_stopnje}'
+
 @dataclass
 class Ura:
     cas: datetime
