@@ -17,6 +17,22 @@ def nalozi_datoteke():
             atributi = vrstica.strip().split(';')
             root.ure.append(model.Ura(datetime.fromisoformat(atributi[0]), int(atributi[1]), root.najdi_predmet(atributi[2]), root.najdi_uporabnika_id(atributi[3]), int(atributi[4])))
 
+def pripravi_ure():
+    trenutni_teden = datetime.today().isocalendar()[1]
+    trenutno_leto = datetime.today().isocalendar()[0]
+    zadnji_datum_v_sistemu = root.ure[-1].cas.date()
+    print(zadnji_datum_v_sistemu)
+    if zadnji_datum_v_sistemu < date.today():
+        for i in range(0, 28):
+            zadnji_ponedeljek = datetime.fromisocalendar(trenutno_leto, trenutni_teden, 1)
+            root.ustvari_dan_praznih_ur(zadnji_ponedeljek + timedelta(days=i))
+    else:
+        razlika_v_tednih = abs(zadnji_datum_v_sistemu.isocalendar()[1] - trenutni_teden)
+        for i in range(0, 28 - 7 * (razlika_v_tednih + 1)):
+            zadnji_ponedeljek = datetime.fromisocalendar(zadnji_datum_v_sistemu.isocalendar()[0], zadnji_datum_v_sistemu.isocalendar()[1], 1)
+            root.ustvari_dan_praznih_ur(zadnji_ponedeljek + timedelta(days=i))
+        
+
 def dobrodoslica():
     print('Dobrodošli v Instructor-inator!\n')
 
@@ -172,6 +188,7 @@ def prijava():
 
 def tekstovni_vmesnik():
     nalozi_datoteke()
+    pripravi_ure()
     dobrodoslica()
     while True:
         if root.prijavljenost:
