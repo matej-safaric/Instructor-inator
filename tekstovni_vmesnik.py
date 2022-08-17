@@ -137,6 +137,25 @@ def ustvari_nov_racun():
 def natisni_urnik():
     pass
 
+def rezervacija():
+    pass
+
+def prikaz_osebnih_ur():
+    pass
+
+def odpoved():
+    pass
+
+def nazaj():
+    pass
+
+def naslednji_teden():
+    pass
+
+def prejsnji_teden():
+    pass
+
+
 def ogled_urnika():
     natisni_urnik()
     izbira_ukaza([('Rezerviraj uro', rezervacija), ('Prikaži moje ure', prikaz_osebnih_ur), ('Odpovej uro', odpoved), ('Nazaj', nazaj), ('Naslednji teden', naslednji_teden), ('Prejšnji teden', prejsnji_teden)])()
