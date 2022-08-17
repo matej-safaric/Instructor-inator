@@ -117,10 +117,10 @@ def ustvari_nov_racun():
             print('To uporabniško ime ni dovoljeno. Prosimo poskusite znova.')
             ustvari_nov_racun()
         else:
-            for uporabnik in root.uporabniki:
-                if username == uporabnik.username:
+            if username in [uporabnik.username for uporabnik in root.uporabniki]:
                     print('To uporabniško ime je že zasedeno. Prosimo poskusite znova.')
                     ustvari_nov_racun()
+            else:
                 password = input('Vpišite željeno geslo\n > ')
                 print('Ali ste učenec ali inštruktor?')
                 instruktor = izbira_ukaza([('Inštruktor', True), ('Učenec', False)])
@@ -191,7 +191,6 @@ def zakljucek():
 def prijava():
     if root.prijavljenost:
         print('Nekdo je že prijavljen v sistem. Prosimo, da se najprej odjavite iz trenutnega računa')
-        homepage_prijavljen()
     else:
         izbira_ukaza([('Prijava za inštruktorje', prijava_instruktor),('Prijava za učence', prijava_ucenec),('Ustvari nov račun', ustvari_nov_racun),('Nazaj', homepage_neprijavljen)])()
 
