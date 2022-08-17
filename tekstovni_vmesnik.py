@@ -2,7 +2,8 @@ import model
 from datetime import datetime
 
 
-root = model.Root([],[],[], False)
+root = model.Root([],[],[], False, None)
+
 def nalozi_datoteke():
     with open('uporabniki.txt', encoding='UTF-8') as dat:
         for vrstica in dat:
@@ -50,10 +51,16 @@ def homepage_neprijavljen():
     print('Kaj želite storiti')
     izbira_ukaza([('Prijava', prijava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek)])()
 
-def homepage_prijavljen():
+def homepage_prijavljen_ucenec():
     print('HOMEPAGE')
     print('Kaj želite storiti')
     izbira_ukaza([('Odjava', odjava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek)])()
+
+def homepage_prijavljen_instruktor():
+    print('HOMEPAGE')
+    print('Kaj želite storiti')
+    izbira_ukaza([('Odjava', odjava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek), ('Pregled morebitnih inštruktorjev', morebitni_instruktorji)])()
+
 
 def prijava_instruktor():
     username = input('Vnesite svoj username. Če želite prekiniti postopek prijave vpišite "/back"\n > ')
@@ -71,7 +78,8 @@ def prijava_instruktor():
         elif root.preveri_prijavo(username, password)[1]:
             print('Prijava uspešna\n')  #Ponudi moznost Ustvari nov racun
             root.prijavljenost = True
-            homepage_prijavljen()
+            root.prijavljenec = root.najdi_uporabnika_username(username)
+            homepage_prijavljen_instruktor()
 
 #DODAJ ATRIBUT .prijavljen v uporabnike
 
@@ -91,10 +99,12 @@ def prijava_ucenec():
         elif root.preveri_prijavo(username, password)[1]:
             print('Prijava uspešna\n')
             root.prijavljenost = True
-            homepage_prijavljen()
+            root.prijavljenec = root.najdi_uporabnika_username(username)
+            homepage_prijavljen_ucenec()
 
 def odjava():
     root.prijavljenost = False
+    root.prijavljenec = None
     print('Odjava je bila uspešna.')
     homepage_neprijavljen()
 
@@ -192,7 +202,10 @@ def tekstovni_vmesnik():
     dobrodoslica()
     while True:
         if root.prijavljenost:
-            homepage_prijavljen()
+            if root.prijavljenec.instruktor:
+                homepage_prijavljen_instruktor()
+            else:
+                homepage_prijavljen_ucenec()
         else:
             homepage_neprijavljen()
 
