@@ -16,7 +16,7 @@ def nalozi_datoteke():
     with open('ure.txt', encoding='UTF-8') as dat:
         for vrstica in dat:
             atributi = vrstica.strip().split(';')
-            root.ure.append(model.Ura(datetime.fromisoformat(atributi[0]), int(atributi[1]), root.najdi_predmet(atributi[2]), root.najdi_uporabnika_id(atributi[3]), int(atributi[4])))
+            root.ure.append(model.Ura(datetime.fromisoformat(atributi[0]), int(atributi[1]), root.najdi_predmet(atributi[2]), root.najdi_uporabnika_id(atributi[3]), root.najdi_uporabnika_id(atributi[4]), int(atributi[5])))
 
 def pripravi_ure():
     trenutni_teden = datetime.today().isocalendar()[1]
@@ -181,7 +181,7 @@ def potrdi_zavrni_instruktorja(uporabnik: model.Uporabnik or None):
                 vrstice = dat.readlines()
             with open('uporabniki.txt', 'w', encoding='UTF-8') as dat:
                 for vrstica in vrstice:
-                    if f'{uporabnik.ime_priimek[0]};{uporabnik.ime_priimek[1]};{uporabnik.username};{uporabnik.password};{uporabnik.id}' in vrstica.strip():
+                    if f'{uporabnik.ime_priimek[0]};{uporabnik.ime_priimek[1]};{uporabnik.username};{uporabnik.password};{uporabnik.id}' not in vrstica.strip():
                         dat.write(vrstica)
                     else:
                         dat.write(f'{uporabnik.ime_priimek[0]};{uporabnik.ime_priimek[1]};{uporabnik.username};{uporabnik.password};{uporabnik.id};True\n')
