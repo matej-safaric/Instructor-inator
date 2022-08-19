@@ -55,6 +55,7 @@ class Ura:
     #   3 - ura je opravljena/izvedena ????
     predmet: Predmet
     ucenec: Uporabnik #ID stevilka ucencu prirejenega racuna
+    instruktor: Uporabnik
     id: int
 
     def __str__(self):
@@ -72,29 +73,34 @@ class Ura:
         self.stopnja_zasedenosti = 0
         self.predmet = None
         self.ucenec = None
+        self.instruktor = None
         with open('ure.txt', 'r', encoding='UTF-8') as dat:
             vrstice = dat.readlines()
         with open('ure.txt', 'w', encoding='UTF-8') as dat:
-            vrstice[self.id - 1] = f'{self.cas.isoformat()};0;None;None;{self.id}\n'
+            vrstice[self.id - 1] = f'{self.cas.isoformat()};0;None;None;None;{self.id}\n'
             dat.writelines(vrstice)
 
         
-    def razpolozi(self):
+    def razpolozi(self, instruktor: Uporabnik):
         self.stopnja_zasedenosti = 1
+        self.instruktor = instruktor
+        self.ucenec = None
+        self.predmet = None
         with open('ure.txt', 'r', encoding='UTF-8') as dat:
             vrstice = dat.readlines()
         with open('ure.txt', 'w', encoding='UTF-8') as dat:
-            vrstice[self.id - 1] = f'{self.cas.isoformat()};1;{self.predmet.id};{self.ucenec.id};{self.id}\n'               #DODAJ PREVERJANJE ALI JE URA ZAPISANA V TXT FILE-U
+            vrstice[self.id - 1] = f'{self.cas.isoformat()};1;None;None;{self.instruktor.id};{self.id}\n'               #DODAJ PREVERJANJE ALI JE URA ZAPISANA V TXT FILE-U
             dat.writelines(vrstice)                                                                       #
 
-    def rezerviraj(self, predmet:Predmet, ucenec:Uporabnik):
+    def rezerviraj(self, predmet:Predmet, ucenec:Uporabnik, instruktor:Uporabnik):
         self.stopnja_zasedenosti = 2
         self.predmet = predmet
         self.ucenec = ucenec
+        self.instruktor = instruktor
         with open('ure.txt', 'r', encoding='UTF-8') as dat:
             vrstice = dat.readlines()
         with open('ure.txt', 'w', encoding='UTF-8') as dat:
-            vrstice[self.id - 1] = f'{self.cas.isoformat()};2;{self.predmet.id};{self.ucenec.id};{self.id}\n'
+            vrstice[self.id - 1] = f'{self.cas.isoformat()};2;{self.predmet.id};{self.ucenec.id};{self.instruktor.id};{self.id}\n'
             dat.writelines(vrstice)
 
 
@@ -108,18 +114,20 @@ class Root:
 
     def ustvari_prazno_uro(self, cas:datetime):
         zadnji_id = self.ure[-1].id
-        self.ure.append(Ura(cas, 0, None, None, zadnji_id + 1))
+        self.ure.append(Ura(cas, 0, None, None, None, zadnji_id + 1))
         with open('ure.txt', 'a', encoding='UTF-8') as dat:
-            dat.write(f'{cas.isoformat()};{0};{None};{None};{zadnji_id + 1}\n')
+            dat.write(f'{cas.isoformat()};{0};{None};{None};{None};{zadnji_id + 1}\n')
 
 
     def ustvari_dan_praznih_ur(self, datum:date):
         zadnji_id = self.ure[-1].id
+        seznam_instruktorjev = [uporabnik for uporabnik in self.uporabniki if uporabnik.instruktor]
         with open('ure.txt', 'a', encoding='UTF-8') as dat:
             for i in range(8, 20):
                 pretvorba_v_datetime = datetime(datum.year, datum.month, datum.day, i )
-                self.ure.append(Ura((pretvorba_v_datetime), 0, None, None, zadnji_id + i - 7))
-                dat.write(f'{pretvorba_v_datetime.isoformat()};{0};{None};{None};{zadnji_id + i - 7}\n')
+                for j, instruktor in enumerate(seznam_instruktorjev):
+                    self.ure.append(Ura((pretvorba_v_datetime), 0, None, None, instruktor.id, zadnji_id + (i - 8) * len(seznam_instruktorjev) + j))
+                    dat.write(f'{pretvorba_v_datetime.isoformat()};{0};{None};{None};{instruktor.id};{zadnji_id + (i - 8) * len(seznam_instruktorjev) + j}\n')
 
     def ustvari_uporabnika(self, ime:str, priimek:str, username:str, password:str, instruktor_bool:bool):
         zadnji_id = self.uporabniki[-1].id
