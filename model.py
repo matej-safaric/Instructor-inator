@@ -23,6 +23,9 @@ class Uporabnik:
     def __str__(self):
         return f'{self.ime_priimek[1]} {self.ime_priimek[0]}'
 
+    def __repr__(self):
+        return f'Uporabnik({self.ime_priimek}, {self.username}, {self.password}, {self.id}, {self.instruktor})'
+
 @dataclass
 class Predmet:
     ime: str
@@ -37,6 +40,9 @@ class Predmet:
         for (stopnja, ime_stopnje) in moznosti:
             if self.stopnja == stopnja:
                 return f'{self.ime} {ime_stopnje}'
+
+    def __repr__(self):
+        return f'Predmet({self.ime}, {self.stopnja}, {self.id})'
 
 @dataclass
 class Ura:
@@ -58,6 +64,9 @@ class Ura:
             return f'{self.cas}: prost termin'
         else:
             return f'{self.cas}: {self.predmet.ime} {self.predmet.stopnja} - {self.ucenec.ime_priimek[1]} {self.ucenec.ime_priimek[0]}'
+
+    def __repr__(self):
+        return(f'Ura({self.cas}, {self.stopnja_zasedenosti}, {self.predmet}, {self.predmet}, {self.ucenec}, {self.instruktor}, {self.id})')
 
     def pocisti(self):
         self.stopnja_zasedenosti = 0
