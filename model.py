@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from datetime import date, datetime
+import json
 from typing import List
 
 
@@ -26,6 +27,15 @@ class Uporabnik:
     def __repr__(self):
         return f'Uporabnik({self.ime_priimek}, {self.username}, {self.password}, {self.id}, {self.instruktor})'
 
+    def v_slovar(self):
+        return {
+            'ime_priimek': self.ime_priimek,
+            'username': self.username,
+            'password': self.password,
+            'id': self.id,
+            'instruktor': self.instruktor
+        }
+
 @dataclass
 class Predmet:
     ime: str
@@ -43,6 +53,13 @@ class Predmet:
 
     def __repr__(self):
         return f'Predmet({self.ime}, {self.stopnja}, {self.id})'
+
+    def v_slovar(self):
+        return {
+            'ime': self.ime,
+            'stopnja': self.stopnja,
+            'id': self.id
+        }
 
 @dataclass
 class Ura:
@@ -68,6 +85,16 @@ class Ura:
 
     def __repr__(self):
         return(f'Ura({self.cas}, {self.stopnja_zasedenosti}, {self.predmet}, {self.predmet}, {self.ucenec}, {self.instruktor}, {self.id})')
+
+    def v_slovar(self):
+        return {
+            'cas': self.cas.isoformat(),
+            'stopnja_zasedenosti': self.stopnja_zasedenosti,
+            'predmet': self.predmet.v_slovar(),
+            'ucenec': self.ucenec.v_slovar(),
+            'instruktor': self.instruktor.v_slovar(),
+            'id': self.id
+        }
 
     def pocisti(self):
         self.stopnja_zasedenosti = 0
@@ -111,6 +138,45 @@ class Root:
     predmeti: List[Predmet]
     prijavljenost: bool
     prijavljenec: Uporabnik
+
+    def v_slovar(self):
+        return {
+            'ure': [ura.v_slovar() for ura in self.ure],
+            'uporabniki': [uporabnik.v_slovar() for uporabnik in self.uporabniki],
+            'predmeti': [predmet.v_slovar() for predmet in self.predmeti],
+            'prijavljenost': self.prijavljenost,
+            'prijavljenec': self.prijavljenec.v_slovar()
+        }
+
+    def predmet_iz_slovarja(self, slovar):
+        return Predmet(
+            slovar['ime'],
+            slovar['stopnja'],
+            slovar['id']
+            )
+
+    def uporabnik_iz_slovarja(self, slovar):
+        return Uporabnik(
+            slovar['ime_priimek'],
+            slovar['username'],
+            slovar['password'],
+            slovar['id'],
+            slovar['instruktor']
+            )
+
+    def ura_iz_slovarja(self, slovar):
+        return Ura(
+        slovar['cas'].fromisoformat(),
+        slovar['stopnja_zasedenosti'],
+        self.predmet_iz_slovarja(slovar['predmet']),
+        self.uporabnik_iz_slovarja(slovar['ucenec']),
+        self.uporabnik_iz_slovarja(slovar['instruktor']),
+        slovar['id']
+        )
+        
+    def v_datoteko(self, datoteka):
+        with open(datoteka, 'w', encoding='UTF-8') as dat:
+            json.dump(self.v_slovar, dat)
 
     def ustvari_prazno_uro(self, cas:datetime):
         zadnji_id = self.ure[-1].id
