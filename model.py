@@ -142,9 +142,13 @@ class Root:
             dat.write(f'{ime};{stopnja};{zadnji_id + 1}\n')
             
     def najdi_uporabnika_id(self, id):
-        for uporabnik in self.uporabniki:
-            if uporabnik.id == id:
-                return uporabnik
+        try:
+            id = int(id)
+            for uporabnik in self.uporabniki:
+                if uporabnik.id == id:
+                    return uporabnik
+        except:
+            pass
 
     def najdi_uporabnika_username(self, username):
         for uporabnik in self.uporabniki:
@@ -161,14 +165,22 @@ class Root:
         return (None, False)
 
     def najdi_predmet(self, id):
-        for predmet in self.predmeti:
-            if predmet.id == id:
-                return predmet    
+        try:
+            id = int(id)
+            for predmet in self.predmeti:
+                if predmet.id == id:
+                    return predmet
+        except:
+            pass   
 
     def najdi_uro(self, id):
-        for ura in self.ure:
-            if ura.id == id:
-                return ura 
+        try:
+            id = int(id)
+            for ura in self.ure:
+                if ura.id == id:
+                    return ura 
+        except:
+            pass
     
 
 # Ustvari funkcijo ki naredi dovolj ur za en dan od 8ih do 20ih npr         X
