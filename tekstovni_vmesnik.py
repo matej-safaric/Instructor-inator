@@ -66,7 +66,7 @@ def homepage_prijavljen_ucenec():
 def homepage_prijavljen_instruktor():
     print('HOMEPAGE')
     print('Kaj želite storiti')
-    izbira = izbira_ukaza([('Odjava', odjava), ('Ogled urnika', ogled_urnika), ('Razpoloži ure', razpolozi_ure), ('Zaključek', zakljucek), ('Pregled morebitnih inštruktorjev', morebitni_instruktorji)])
+    izbira = izbira_ukaza([('Odjava', odjava), ('Ogled urnika', ogled_urnika), ('Razpoloži ure', razpolozi_ure), ('Ustvari predmet', ustvari_predmet()), ('Zaključek', zakljucek), ('Pregled morebitnih inštruktorjev', morebitni_instruktorji)])
     if izbira == ogled_urnika:
         print('Katerega inštruktorja želite?')
         instruktor = izbira_ukaza([(f'{uporabnik}', uporabnik) for uporabnik in root.uporabniki if uporabnik.instruktor])
@@ -200,6 +200,9 @@ def ogled_urnika(teden: int, instruktor: model.Uporabnik):
         izbira(teden - 1, instruktor)
     else:
         izbira()
+
+def ustvari_predmet():
+    pass
 
 def potrdi_zavrni_instruktorja(uporabnik: model.Uporabnik or None):
     if uporabnik == None:
