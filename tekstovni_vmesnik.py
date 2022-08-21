@@ -5,18 +5,13 @@ from datetime import datetime, date, timedelta
 root = model.Root([],[],[], False, None)
 
 def nalozi_datoteke():
-    with open('uporabniki.txt', encoding='UTF-8') as dat:
-        for vrstica in dat:
-            atributi = vrstica.strip().split(';')
-            root.uporabniki.append(model.Uporabnik((atributi[0], atributi[1]), atributi[2], atributi[3], int(atributi[4]), True if atributi[5] == 'True' else False))
-    with open('predmeti.txt', encoding='UTF-8') as dat:
-        for vrstica in dat:
-            atributi = vrstica.strip().split(';')
-            root.predmeti.append(model.Predmet(atributi[0], int(atributi[1]), int(atributi[2])))
-    with open('ure.txt', encoding='UTF-8') as dat:
-        for vrstica in dat:
-            atributi = vrstica.strip().split(';')
-            root.ure.append(model.Ura(datetime.fromisoformat(atributi[0]), int(atributi[1]), root.najdi_predmet(atributi[2]), root.najdi_uporabnika_id(atributi[3]), root.najdi_uporabnika_id(atributi[4]), int(atributi[5])))
+    with open('uporabniki.json', encoding='UTF-8') as dat:
+        root.uporabniki.extend([model.Uporabnik.iz_slovarja(slovar) for slovar in json.load(dat)])
+    with open('predmeti.json', encoding='UTF-8') as dat:
+        root.predmeti.extend([model.Predmet.iz_slovarja(slovar) for slovar in json.load(dat)])
+    with open('ure.json', encoding='UTF-8') as dat:
+        root.ure.extend([model.Ura.iz_slovarja(slovar) for slovar in json.load(dat)])
+            
 
 def pripravi_ure():
     trenutni_teden = datetime.today().isocalendar()[1]
@@ -32,7 +27,7 @@ def pripravi_ure():
         for i in range(0, 28 - 7 * (razlika_v_tednih + 1)):
             zadnji_ponedeljek = datetime.fromisocalendar(zadnji_datum_v_sistemu.isocalendar()[0], zadnji_datum_v_sistemu.isocalendar()[1], 1)
             root.ustvari_dan_praznih_ur(zadnji_ponedeljek + timedelta(days=i))
-        
+    root.shrani_ure('ure.json')
 
 def dobrodoslica():
     print('Dobrodošli v Instructor-inator!\n')
