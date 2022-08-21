@@ -168,8 +168,41 @@ def natisni_urnik(teden: int, instruktor: model.Uporabnik):
         print(vrstica)
         print('-----------------------------------------------------------------------------------------------------------')
 
+def rezervacija_izberi_datum(predmet, instruktor):
+    datum = input('Vpišite datum, v katerem bi radi rezervirali uro/ure, v obliki "YYYY-MM-DD"\nČe želite prekiniti postopek, vnesite /back\n> ')
+    if datum != '/back':
+        seznam_instruktorjevih_ur = [ura for ura in root.ure if ura.instruktor == instruktor]
+        datum = date.fromisoformat(datum)
+        ure_v_izbranem_dnevu = [ura for ura in seznam_instruktorjevih_ur if ura.cas.date() == datum]
+        while True:
+            ura = input('Vpišite željeno uro, tako da vnesete celo število na zaprtem intervalu od 8 do 19\nČe želite izbrati drug datum vpišite /back\n> ')
+            if ura not in [str(i) for i in range(8, 20)] + ['/back']:
+                print('Vnesti morate število med 8 in 19 ali /back!')
+            elif ura == '/back':
+                rezervacija_izberi_datum(predmet, instruktor)
+            else:
+                izbrana_ura = ure_v_izbranem_dnevu[int(ura) - 8]
+                if izbrana_ura.stopnja_zasedenosti == 0:
+                    print('Ta ura ni na voljo. Prosimo izberite drugo uro.')
+                elif izbrana_ura.stopnja_zasedenosti == 2:
+                    print('Ta ura je že zasedena. Prosimo izberite drugo uro.')
+                else:
+                    izbrana_ura.rezerviraj(predmet, root.prijavljenec, instruktor)
+                    print('Ura uspešno rezervirana!')
+                    root.shrani_ure('ure.json')
+    else:
+        homepage_prijavljen_ucenec()            
+
 def rezervacija():
-    pass
+    print('Izberite predmet, pri katerem želite inštrukcije.')
+    predmet = izbira_ukaza([(f'{predmet}', predmet) for predmet in root.predmeti] + [('Nazaj', None)])
+    if predmet != None:
+        print('Izberite inštruktorja, pri katerem želite inštrukcije.')
+        instruktor = izbira_ukaza([(f'{uporabnik}', uporabnik) for uporabnik in root.uporabniki if uporabnik.instruktor])
+        rezervacija_izberi_datum(predmet, instruktor)
+    else:
+        homepage_prijavljen_ucenec()
+
 
 def prikaz_osebnih_ur():
     pass
