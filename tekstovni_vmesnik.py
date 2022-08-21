@@ -1,5 +1,6 @@
 import model
 from datetime import datetime, date, timedelta
+import json
 
 
 root = model.Root([],[],[], False, None)
@@ -189,7 +190,10 @@ def prejsnji_teden(teden, instruktor):
 def ogled_urnika(teden: int, instruktor: model.Uporabnik):
     print('Katerega inštruktorja želite?')
     natisni_urnik(teden, instruktor)
-    izbira = izbira_ukaza([('Rezerviraj uro', rezervacija), ('Prikaži moje ure', prikaz_osebnih_ur), ('Odpovej uro', odpoved), ('Nazaj', nazaj), ('Naslednji teden', naslednji_teden), ('Prejšnji teden', prejsnji_teden)])
+    if root.prijavljenec.instruktor:
+        izbira = izbira_ukaza([('Prikaži moje ure', prikaz_osebnih_ur), ('Odpovej uro', odpoved), ('Naslednji teden', naslednji_teden), ('Prejšnji teden', prejsnji_teden), ('Nazaj', nazaj)])
+    else:
+        izbira = izbira_ukaza([('Rezerviraj uro', rezervacija), ('Prikaži moje ure', prikaz_osebnih_ur), ('Odpovej uro', odpoved), ('Naslednji teden', naslednji_teden), ('Prejšnji teden', prejsnji_teden), ('Nazaj', nazaj)])
     if izbira == naslednji_teden:
         izbira(teden + 1, instruktor)
     elif izbira == prejsnji_teden:
