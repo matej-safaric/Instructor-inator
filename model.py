@@ -130,7 +130,6 @@ class Ura:
         self.stopnja_zasedenosti = 0
         self.predmet = None
         self.ucenec = None
-        self.instruktor = None
 
     def razpolozi(self, instruktor: Uporabnik):
         self.stopnja_zasedenosti = 1
@@ -138,11 +137,10 @@ class Ura:
         self.ucenec = None
         self.predmet = None
 
-    def rezerviraj(self, predmet:Predmet, ucenec:Uporabnik, instruktor:Uporabnik):
+    def rezerviraj(self, predmet:Predmet, ucenec:Uporabnik):
         self.stopnja_zasedenosti = 2
         self.predmet = predmet
         self.ucenec = ucenec
-        self.instruktor = instruktor
 
 @dataclass
 class Root:
