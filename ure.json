@@ -4336,7 +4336,7 @@
     },
     {
         "cas": "2022-08-22T09:00:00",
-        "stopnja_zasedenosti": 1,
+        "stopnja_zasedenosti": 0,
         "predmet": null,
         "ucenec": null,
         "instruktor": {
@@ -4387,9 +4387,22 @@
     },
     {
         "cas": "2022-08-22T10:00:00",
-        "stopnja_zasedenosti": 1,
-        "predmet": null,
-        "ucenec": null,
+        "stopnja_zasedenosti": 2,
+        "predmet": {
+            "ime": "matematika",
+            "stopnja": 1,
+            "id": 1
+        },
+        "ucenec": {
+            "ime_priimek": [
+                "Alfi",
+                "Snific"
+            ],
+            "username": "Ucko",
+            "password": "4321",
+            "id": 2,
+            "instruktor": false
+        },
         "instruktor": {
             "ime_priimek": [
                 "Safaric",
@@ -4438,9 +4451,22 @@
     },
     {
         "cas": "2022-08-22T11:00:00",
-        "stopnja_zasedenosti": 1,
-        "predmet": null,
-        "ucenec": null,
+        "stopnja_zasedenosti": 2,
+        "predmet": {
+            "ime": "matematika",
+            "stopnja": 1,
+            "id": 1
+        },
+        "ucenec": {
+            "ime_priimek": [
+                "Alfi",
+                "Snific"
+            ],
+            "username": "Ucko",
+            "password": "4321",
+            "id": 2,
+            "instruktor": false
+        },
         "instruktor": {
             "ime_priimek": [
                 "Safaric",
@@ -4591,9 +4617,22 @@
     },
     {
         "cas": "2022-08-22T14:00:00",
-        "stopnja_zasedenosti": 1,
-        "predmet": null,
-        "ucenec": null,
+        "stopnja_zasedenosti": 2,
+        "predmet": {
+            "ime": "matematika",
+            "stopnja": 1,
+            "id": 1
+        },
+        "ucenec": {
+            "ime_priimek": [
+                "Alfi",
+                "Snific"
+            ],
+            "username": "Ucko",
+            "password": "4321",
+            "id": 2,
+            "instruktor": false
+        },
         "instruktor": {
             "ime_priimek": [
                 "Safaric",
@@ -4897,7 +4936,7 @@
     },
     {
         "cas": "2022-08-23T08:00:00",
-        "stopnja_zasedenosti": 0,
+        "stopnja_zasedenosti": 1,
         "predmet": null,
         "ucenec": null,
         "instruktor": {
@@ -4948,7 +4987,7 @@
     },
     {
         "cas": "2022-08-23T09:00:00",
-        "stopnja_zasedenosti": 0,
+        "stopnja_zasedenosti": 1,
         "predmet": null,
         "ucenec": null,
         "instruktor": {
@@ -4999,7 +5038,7 @@
     },
     {
         "cas": "2022-08-23T10:00:00",
-        "stopnja_zasedenosti": 0,
+        "stopnja_zasedenosti": 1,
         "predmet": null,
         "ucenec": null,
         "instruktor": {
@@ -5050,7 +5089,7 @@
     },
     {
         "cas": "2022-08-23T11:00:00",
-        "stopnja_zasedenosti": 0,
+        "stopnja_zasedenosti": 1,
         "predmet": null,
         "ucenec": null,
         "instruktor": {

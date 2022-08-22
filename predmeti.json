@@ -8,5 +8,10 @@
         "ime": "fizika",
         "stopnja": 2,
         "id": 2
+    },
+    {
+        "ime": "matematika",
+        "stopnja": 2,
+        "id": 3
     }
 ]
