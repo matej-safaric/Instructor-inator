@@ -1,0 +1,17 @@
+[
+    {
+        "ime": "matematika",
+        "stopnja": 1,
+        "id": 1
+    },
+    {
+        "ime": "fizika",
+        "stopnja": 2,
+        "id": 2
+    },
+    {
+        "ime": "matematika",
+        "stopnja": 2,
+        "id": 3
+    }
+]

@@ -1,0 +1,42 @@
+[
+    {
+        "ime_priimek": [
+            "Safaric",
+            "Matej"
+        ],
+        "username": "Prof",
+        "password": "1234",
+        "id": 1,
+        "instruktor": true
+    },
+    {
+        "ime_priimek": [
+            "Alfi",
+            "Snific"
+        ],
+        "username": "Ucko",
+        "password": "4321",
+        "id": 2,
+        "instruktor": false
+    },
+    {
+        "ime_priimek": [
+            "\u010cernigoj",
+            "Lana"
+        ],
+        "username": "booboo",
+        "password": "booboo1",
+        "id": 3,
+        "instruktor": true
+    },
+    {
+        "ime_priimek": [
+            "Pave\u0161i\u010d",
+            "Petar"
+        ],
+        "username": "petrograd69",
+        "password": "pupukaka",
+        "id": 4,
+        "instruktor": true
+    }
+]

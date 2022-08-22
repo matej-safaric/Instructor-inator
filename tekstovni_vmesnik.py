@@ -1,28 +1,23 @@
 import model
 from datetime import datetime, date, timedelta
+import json
 
 
 root = model.Root([],[],[], False, None)
 
 def nalozi_datoteke():
-    with open('uporabniki.txt', encoding='UTF-8') as dat:
-        for vrstica in dat:
-            atributi = vrstica.strip().split(';')
-            root.uporabniki.append(model.Uporabnik((atributi[0], atributi[1]), atributi[2], atributi[3], int(atributi[4]), True if atributi[5] == 'True' else False))
-    with open('predmeti.txt', encoding='UTF-8') as dat:
-        for vrstica in dat:
-            atributi = vrstica.strip().split(';')
-            root.predmeti.append(model.Predmet(atributi[0], int(atributi[1]), int(atributi[2])))
-    with open('ure.txt', encoding='UTF-8') as dat:
-        for vrstica in dat:
-            atributi = vrstica.strip().split(';')
-            root.ure.append(model.Ura(datetime.fromisoformat(atributi[0]), int(atributi[1]), root.najdi_predmet(atributi[2]), root.najdi_uporabnika_id(atributi[3]), root.najdi_uporabnika_id(atributi[4]), int(atributi[5])))
+    with open('uporabniki.json', encoding='UTF-8') as dat:
+        root.uporabniki.extend([model.Uporabnik.iz_slovarja(slovar) for slovar in json.load(dat)])
+    with open('predmeti.json', encoding='UTF-8') as dat:
+        root.predmeti.extend([model.Predmet.iz_slovarja(slovar) for slovar in json.load(dat)])
+    with open('ure.json', encoding='UTF-8') as dat:
+        root.ure.extend([model.Ura.iz_slovarja(slovar) for slovar in json.load(dat)])
+            
 
 def pripravi_ure():
     trenutni_teden = datetime.today().isocalendar()[1]
     trenutno_leto = datetime.today().isocalendar()[0]
     zadnji_datum_v_sistemu = root.ure[-1].cas.date()
-    print(zadnji_datum_v_sistemu)
     if zadnji_datum_v_sistemu < date.today():
         for i in range(0, 28):
             zadnji_ponedeljek = datetime.fromisocalendar(trenutno_leto, trenutni_teden, 1)
@@ -32,7 +27,7 @@ def pripravi_ure():
         for i in range(0, 28 - 7 * (razlika_v_tednih + 1)):
             zadnji_ponedeljek = datetime.fromisocalendar(zadnji_datum_v_sistemu.isocalendar()[0], zadnji_datum_v_sistemu.isocalendar()[1], 1)
             root.ustvari_dan_praznih_ur(zadnji_ponedeljek + timedelta(days=i))
-        
+    root.shrani_ure('ure.json')
 
 def dobrodoslica():
     print('Dobrodošli v Instructor-inator!\n')
@@ -49,18 +44,35 @@ def izbira_ukaza(ukazi: list):
 def homepage_neprijavljen():
     print('HOMEPAGE')
     print('Kaj želite storiti')
-    izbira_ukaza([('Prijava', prijava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek)])()
+    izbira = izbira_ukaza([('Prijava', prijava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek)])
+    if izbira == ogled_urnika:
+        print('Katerega inštruktorja želite?')
+        instruktor = izbira_ukaza([(f'{uporabnik}', uporabnik) for uporabnik in root.uporabniki if uporabnik.instruktor])
+        ogled_urnika(date.today().isocalendar()[1], instruktor)
+    else: 
+        izbira()
 
 def homepage_prijavljen_ucenec():
     print('HOMEPAGE')
     print('Kaj želite storiti')
-    izbira_ukaza([('Odjava', odjava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek)])()
+    izbira = izbira_ukaza([('Odjava', odjava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek)])
+    if izbira == ogled_urnika:
+        print('Katerega inštruktorja želite?')
+        instruktor = izbira_ukaza([(f'{uporabnik}', uporabnik) for uporabnik in root.uporabniki if uporabnik.instruktor])
+        ogled_urnika(date.today().isocalendar()[1], instruktor)
+    else: 
+        izbira()
 
 def homepage_prijavljen_instruktor():
     print('HOMEPAGE')
     print('Kaj želite storiti')
-    izbira_ukaza([('Odjava', odjava), ('Ogled urnika', ogled_urnika), ('Zaključek', zakljucek), ('Pregled morebitnih inštruktorjev', morebitni_instruktorji)])()
-
+    izbira = izbira_ukaza([('Odjava', odjava), ('Ogled urnika', ogled_urnika), ('Razpoloži ure', razpolozi_ure), ('Ustvari predmet', ustvari_predmet), ('Zaključek', zakljucek), ('Pregled morebitnih inštruktorjev', morebitni_instruktorji)])
+    if izbira == ogled_urnika:
+        print('Katerega inštruktorja želite?')
+        instruktor = izbira_ukaza([(f'{uporabnik}', uporabnik) for uporabnik in root.uporabniki if uporabnik.instruktor])
+        ogled_urnika(date.today().isocalendar()[1], instruktor)
+    else:
+        izbira()
 
 def prijava_instruktor():
     username = input('Vnesite svoj username. Če želite prekiniti postopek prijave vpišite "/back"\n > ')
@@ -134,55 +146,131 @@ def ustvari_nov_racun():
                     homepage_neprijavljen()
 
 
-def natisni_urnik(teden: int):
-    print('Za kateri predmet potrebujete inštrukcije?')
-    predmet = izbira_ukaza([(f'{predmet}', predmet) for predmet in root.predmeti])
-    print('Katerega inštruktorja želite?')
-    instruktor = izbira_ukaza([(f'{uporabnik}', uporabnik.username) for uporabnik in root.uporabniki if uporabnik.instruktor])
-    for ura in root.ure:
-        print(ura)
-    for uporabnik in root.uporabniki:
-        print(uporabnik)
-    for predmet in root.predmeti:
-        print(predmet)
-    seznam_instruktorjevih_ur = [ura for ura in root.ure if ura.instruktor.username == instruktor]
+def natisni_urnik(teden: int, instruktor: model.Uporabnik):
+    seznam_instruktorjevih_ur = [ura for ura in root.ure if ura.instruktor == instruktor]
     seznam_instruktorjevih_ur_v_tem_tednu = [ura for ura in seznam_instruktorjevih_ur if ura.cas.isocalendar()[1] == teden]
-    print(seznam_instruktorjevih_ur_v_tem_tednu)
     print(f'Urnik instruktorja: {instruktor}')
+    print('-----------------------------------------------------------------------------------------------------------')
     for i in range(8, 20):
-        vrstica = f'| {i}:00 |'
+        vrstica = f'| {i:>2}:00 |'
         for ura in seznam_instruktorjevih_ur_v_tem_tednu:
-            if ura.cas.hour() == i:
+            if ura.cas.hour == i:
                 if ura.stopnja_zasedenosti == 0:
-                    vrstica += f' ### |'
+                    vrstica += '     ###     |'
                 elif ura.stopnja_zasedenosti == 1:
-                    vrstica += f' prost termin |'
+                    vrstica += ' prost termin |'
                 else:
-                    vrstica += f' zasedeno |'
-        print('-----------------------------------------------------------------------------')
+                    vrstica += '   zasedeno   |'
+        print(vrstica)
+        print('-----------------------------------------------------------------------------------------------------------')
+
+def rezervacija_izberi_datum(predmet, instruktor):
+    datum = input('Vpišite datum, v katerem bi radi rezervirali uro/ure, v obliki "YYYY-MM-DD"\nČe želite prekiniti postopek, vnesite /back\n> ')
+    if datum != '/back':
+        seznam_instruktorjevih_ur = [ura for ura in root.ure if ura.instruktor == instruktor]
+        datum = date.fromisoformat(datum)
+        ure_v_izbranem_dnevu = [ura for ura in seznam_instruktorjevih_ur if ura.cas.date() == datum]
+        while True:
+            ura = input('Vpišite željeno uro, tako da vnesete celo število na zaprtem intervalu od 8 do 19\nČe želite izbrati drug datum vpišite /back\n> ')
+            if ura not in [str(i) for i in range(8, 20)] + ['/back']:
+                print('Vnesti morate število med 8 in 19 ali /back!')
+            elif ura == '/back':
+                rezervacija_izberi_datum(predmet, instruktor)
+            else:
+                izbrana_ura = ure_v_izbranem_dnevu[int(ura) - 8]
+                if izbrana_ura.stopnja_zasedenosti == 0:
+                    print('Ta ura ni na voljo. Prosimo izberite drugo uro.')
+                elif izbrana_ura.stopnja_zasedenosti == 2:
+                    print('Ta ura je že zasedena. Prosimo izberite drugo uro.')
+                else:
+                    izbrana_ura.rezerviraj(predmet, root.prijavljenec)
+                    print('Ura uspešno rezervirana!')
+                    root.shrani_ure('ure.json')
+    else:
+        homepage_prijavljen_ucenec()            
 
 def rezervacija():
-    pass
+    print('Izberite predmet, pri katerem želite inštrukcije.')
+    predmet = izbira_ukaza([(f'{predmet}', predmet) for predmet in root.predmeti] + [('Nazaj', None)])
+    if predmet != None:
+        print('Izberite inštruktorja, pri katerem želite inštrukcije.')
+        instruktor = izbira_ukaza([(f'{uporabnik}', uporabnik) for uporabnik in root.uporabniki if uporabnik.instruktor])
+        rezervacija_izberi_datum(predmet, instruktor)
+    else:
+        homepage_prijavljen_ucenec()
+
 
 def prikaz_osebnih_ur():
-    pass
+    trenuten_cas = datetime.today()
+    ure_uporabnika = [ura for ura in root.ure if ura.ucenec == root.prijavljenec]
+    prihajajoce_ure = [ura for ura in ure_uporabnika if ura.cas > trenuten_cas]
+    pretekle_ure = [ura for ura in ure_uporabnika if ura.cas < trenuten_cas]
+    print('PRIHAJAJOČE URE:\n')
+    for ura in prihajajoce_ure:
+        print(ura)
+    print('\n')
+    for ura in pretekle_ure:
+        print(ura)
+    print('\n')
 
-def odpoved():
-    pass
+def odpoved_ucenec():
+    trenuten_cas = datetime.today()
+    seznam_ur_uporabnika = [ura for ura in root.ure if ura.ucenec == root.prijavljenec]
+    seznam_prihajajocih_ur = [ura for ura in seznam_ur_uporabnika if ura.cas > trenuten_cas + timedelta(days=2)]
+    print('Če želite odpovedati uro, morate to storiti vsaj dva dni vnaprej.\nKatero uro bi radi odpovedali?')
+    izbira = izbira_ukaza([(f'{ura}', ura) for ura in seznam_prihajajocih_ur] + [('Nazaj', None)])
+    if izbira != None:
+        izbira.pocisti()
+        root.shrani_ure('ure.json')
+        print('Ura je bila uspešno odpovedana.')
+
+def odpoved_instruktor():
+    trenuten_cas = datetime.today()
+    seznam_ur_uporabnika = [ura for ura in root.ure if ura.instruktor == root.prijavljenec and ura.stopnja_zasedenosti == 2]
+    seznam_prihajajocih_ur = [ura for ura in seznam_ur_uporabnika if ura.cas > trenuten_cas]
+    print('Katero uro bi radi odpovedali?')
+    izbira = izbira_ukaza([(f'{ura}', ura) for ura in seznam_prihajajocih_ur] + [('Nazaj', None)])
+    if izbira != None:
+        izbira.pocisti()
+        root.shrani_ure('ure.json')
+        print('Ura je bila uspešno odpovedana.')
 
 def nazaj():
     pass
 
-def naslednji_teden():
-    pass
+def naslednji_teden(teden, instruktor):
+    ogled_urnika(teden, instruktor)
 
-def prejsnji_teden():
-    pass
+def prejsnji_teden(teden, instruktor):
+    ogled_urnika(teden, instruktor)
 
 
-def ogled_urnika():
-    natisni_urnik(date.today().isocalendar()[1])
-    izbira_ukaza([('Rezerviraj uro', rezervacija), ('Prikaži moje ure', prikaz_osebnih_ur), ('Odpovej uro', odpoved), ('Nazaj', nazaj), ('Naslednji teden', naslednji_teden), ('Prejšnji teden', prejsnji_teden)])()
+def ogled_urnika(teden: int, instruktor: model.Uporabnik):
+    natisni_urnik(teden, instruktor)
+    if root.prijavljenec == None:
+        izbira = izbira_ukaza([('Prijava', prijava), ('Naslednji teden', naslednji_teden), ('Prejšnji teden', prejsnji_teden), ('Nazaj', nazaj)])        
+    elif root.prijavljenec.instruktor:
+        izbira = izbira_ukaza([('Prikaži moje ure', prikaz_osebnih_ur), ('Odpovej uro', odpoved_instruktor), ('Naslednji teden', naslednji_teden), ('Prejšnji teden', prejsnji_teden), ('Nazaj', nazaj)])
+    else:
+        izbira = izbira_ukaza([('Rezerviraj uro', rezervacija), ('Prikaži moje ure', prikaz_osebnih_ur), ('Odpovej uro', odpoved_ucenec), ('Naslednji teden', naslednji_teden), ('Prejšnji teden', prejsnji_teden), ('Nazaj', nazaj)])
+    if izbira == naslednji_teden:
+        izbira(teden + 1, instruktor)
+    elif izbira == prejsnji_teden:
+        izbira(teden - 1, instruktor)
+    else:
+        izbira()
+
+def ustvari_predmet():
+    ime_predmeta = input('Vnesite ime predmeta\n> ')
+    stopnja = input('Vnesite stopnjo predmeta\n> ')
+    if stopnja not in ['OŠ', 'SŠ', 'FK']:
+        print('Ta stopnja predmeta ne obstaja. Prosimo poskusite ponovno.')
+        ustvari_predmet()
+    else:
+        root.ustvari_predmet(ime_predmeta, ['OŠ', 'SŠ', 'FK'].index(stopnja))
+        root.shrani_predmete('predmeti.json')
+        print('Predmet je bil uspešno ustvarjen.')
+
 
 def potrdi_zavrni_instruktorja(uporabnik: model.Uporabnik or None):
     if uporabnik == None:
@@ -201,14 +289,7 @@ def potrdi_zavrni_instruktorja(uporabnik: model.Uporabnik or None):
                     if vrstica.strip() != f'{uporabnik.ime_priimek[0]};{uporabnik.ime_priimek[1]};{uporabnik.username};{uporabnik.password};{uporabnik.id}':
                         dat.write(vrstica)
             
-            with open('uporabniki.txt', encoding='UTF-8') as dat:
-                vrstice = dat.readlines()
-            with open('uporabniki.txt', 'w', encoding='UTF-8') as dat:
-                for vrstica in vrstice:
-                    if f'{uporabnik.ime_priimek[0]};{uporabnik.ime_priimek[1]};{uporabnik.username};{uporabnik.password};{uporabnik.id}' not in vrstica.strip():
-                        dat.write(vrstica)
-                    else:
-                        dat.write(f'{uporabnik.ime_priimek[0]};{uporabnik.ime_priimek[1]};{uporabnik.username};{uporabnik.password};{uporabnik.id};True\n')
+            root.shrani_uporabnike('uporabniki.json')
 
             print('Sprejeto!')
         else:                                       #DODAJ txt file AKTIVNOST PROGRAMA.txt ki prepreci prijavo ce nekdo odpre se eno okno s programom
@@ -227,7 +308,28 @@ def morebitni_instruktorji():
     izbira = izbira_ukaza([(f'{vrstica.strip().split(";")[1]} {vrstica.strip().split(";")[0]}', root.najdi_uporabnika_id(int(vrstica.strip().split(";")[-1]))) for vrstica in vrstice] + [('Nazaj', None)])
     potrdi_zavrni_instruktorja(izbira)
 
+def razpolozi_ure(): 
+    seznam_instruktorjevih_ur = [ura for ura in root.ure if ura.instruktor == root.prijavljenec]
+    while True:
+        datum = input('Vpišite datum, v katerem bi radi razpoložili ure, v obliki "YYYY-MM-DD"\nČe želite prekiniti postopek, vnesite /back\n> ')
+        if datum != '/back':
+            datum = date.fromisoformat(datum)
+            ure_v_izbranem_dnevu = [ura for ura in seznam_instruktorjevih_ur if ura.cas.date() == datum]
+            while True:
+                ura = input('Vpišite željeno uro, tako da vnesete celo število na zaprtem intervalu od 8 do 19\nČe želite izbrati drug datum vpišite /back\n> ')
+                if ura not in [str(i) for i in range(8, 20)].append('/back'):
+                    print('Vnesti morate število med 8 in 19!') 
+                else:
+                    ure_v_izbranem_dnevu[int(ura) - 8].razpolozi(root.prijavljenec)
+                    print('Ura je uspešno razpoložena!')
+                    root.shrani_ure('ure.json')
+        else:
+            homepage_prijavljen_instruktor()
+
 def zakljucek():
+    root.shrani_predmete('predmeti.json')
+    root.shrani_uporabnike('uporabniki.json')
+    root.shrani_ure('ure.json')
     exit()
 
 
