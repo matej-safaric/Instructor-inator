@@ -1,0 +1,28 @@
+<h1>Instructor-inator 3000</h1>
+
+<h2>HOMEPAGE</h2>
+
+<a href="/log-in">Prijava</a>
+
+<table>
+    <tr>
+        <th> ure </th>
+        <th> PON </th>
+        <th> TOR </th>
+        <th> SRE </th>
+        <th> ČET </th>
+        <th> PET </th>
+        <th> SOB </th>
+        <th> NED </th>
+    </tr>
+    
+    %for vrstica in vrstice:
+    <tr>
+        %for celica in vrstica:
+            <td>{{celica}}</td>
+        %end
+    </tr>
+    %end
+</table>
+
+<form action="/"><button value="-1" name="teden">Prejšnji teden</button></form>       <form action="/"><button value="1" name="teden">Naslednji teden</button></form>

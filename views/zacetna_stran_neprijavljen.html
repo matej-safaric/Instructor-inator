@@ -1,0 +1,51 @@
+<h1> ZAČETNA STRAN </h1>
+<label for="instruktorji">Izberite inštruktorja:</label>
+<select name="instruktorji" id="instruktorji">
+        %for instruktor in seznam_instruktorjev:
+            <option value="{{ instruktor }}"> {{instruktor}} </option>
+        %end
+</select>
+
+%for vrstica in vrstice:
+    {{vrstica}}
+%end
+
+<table>
+    <tr>
+        <th> ure </th>
+        <th> PON </th>
+        <th> TOR </th>
+        <th> SRE </th>
+        <th> ČET </th>
+        <th> PET </th>
+        <th> SOB </th>
+        <th> NED </th>
+    </tr>
+    
+    %for vrstica in vrstice:
+    <tr>
+        %for celica in vrstica:
+            <td>{{celica}}</td>
+        %end
+    </tr>
+    %end
+</table>
+
+<table>
+    <tr>
+      <th>Company</th>
+      <th>Contact</th>
+      <th>Country</th>
+    </tr>
+    <tr>
+      <td>Alfreds Futterkiste</td>
+      <td>Maria Anders</td>
+      <td>Germany</td>
+    </tr>
+    <tr>
+      <td>Centro comercial Moctezuma</td>
+      <td>Francisco Chang</td>
+      <td>Mexico</td>
+    </tr>
+  </table>
+
