@@ -71,4 +71,39 @@ def odjava():
     bottle.response.delete_cookie('instruktor_bool', path="/")
     bottle.redirect("/")
 
+
+@bottle.get("/")
+def zacetna_stran():
+    return bottle.template(
+        "zacetna_stran.html",
+        seznam_instruktorjev = root.seznam_instruktorjev()
+        )
+
+@bottle.get("/urnik")
+def urnik():
+    try:
+        id_instruktorja = bottle.request.query['instruktorji']
+    except KeyError:
+        id_instruktorja = 1
+    bottle.redirect(f"/urnik/{id_instruktorja}/{model.date.today().isocalendar()[0]}/{model.date.today().isocalendar()[1]}/")
+    # return bottle.template(
+    #     "urnik.html",
+    #     vrstice = root.pripravi_urnik_html_tabela(model.date.today().isocalendar()[1], root.najdi_uporabnika_id(id_instruktorja)),
+    #     seznam_instruktorjev = root.seznam_instruktorjev()
+    # )
+
+@bottle.get("/urnik/<id_instruktorja:int>/<leto:int>/<teden:int>/")
+def urnik2(id_instruktorja, leto=model.date.today().isocalendar()[0], teden=model.date.today().isocalendar()[1]):
+    return bottle.template(
+        "urnik.html",
+        vrstice = root.pripravi_urnik_html_tabela(leto, teden, root.najdi_uporabnika_id(id_instruktorja)),
+        seznam_instruktorjev = root.seznam_instruktorjev(),
+        naslednji_teden=(date.fromisocalendar(leto, teden, 1) + timedelta(weeks=1)).isocalendar()[1],
+        leto_naslednjega_tedna=(date.fromisocalendar(leto, teden, 1) + timedelta(weeks=1)).isocalendar()[0],
+        id_instruktorja = id_instruktorja,
+        prejsnji_teden=(date.fromisocalendar(leto, teden, 1) - timedelta(weeks=1)).isocalendar()[1],
+        leto_prejsnjega_tedna=(date.fromisocalendar(leto, teden, 1) - timedelta(weeks=1)).isocalendar()[0]
+    )
+
+    
 bottle.run(reloader=True, debug=True)
