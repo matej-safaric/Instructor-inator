@@ -98,12 +98,45 @@ def urnik2(id_instruktorja, leto=model.date.today().isocalendar()[0], teden=mode
         "urnik.html",
         vrstice = root.pripravi_urnik_html_tabela(leto, teden, root.najdi_uporabnika_id(id_instruktorja)),
         seznam_instruktorjev = root.seznam_instruktorjev(),
-        naslednji_teden=(date.fromisocalendar(leto, teden, 1) + timedelta(weeks=1)).isocalendar()[1],
-        leto_naslednjega_tedna=(date.fromisocalendar(leto, teden, 1) + timedelta(weeks=1)).isocalendar()[0],
+        naslednji_teden = (date.fromisocalendar(leto, teden, 1) + timedelta(weeks=1)).isocalendar()[1],
+        leto_naslednjega_tedna = (date.fromisocalendar(leto, teden, 1) + timedelta(weeks=1)).isocalendar()[0],
         id_instruktorja = id_instruktorja,
-        prejsnji_teden=(date.fromisocalendar(leto, teden, 1) - timedelta(weeks=1)).isocalendar()[1],
-        leto_prejsnjega_tedna=(date.fromisocalendar(leto, teden, 1) - timedelta(weeks=1)).isocalendar()[0]
+        prejsnji_teden = (date.fromisocalendar(leto, teden, 1) - timedelta(weeks=1)).isocalendar()[1],
+        leto_prejsnjega_tedna = (date.fromisocalendar(leto, teden, 1) - timedelta(weeks=1)).isocalendar()[0],
+        instruktor_bool = bool(int(bottle.request.get_cookie('instruktor_bool'))),
     )
+
+
+
+@bottle.get("/ustvari_predmet/")
+def ustvari_predmet_form():
+    return bottle.template(
+        "ustvari_predmet.html",
+        napaka_pri_vnosu = False,
+        predmet_ze_obstaja = False
+        )
+
+@bottle.post("/ustvari_predmet/0/")
+def ustvari_predmet():
+    try:
+        ime_predmeta = bottle.request.forms.getunicode('ime_predmeta')
+        stopnja = int(bottle.request.forms['stopnja'])
+        try:
+            root.ustvari_predmet(ime_predmeta, stopnja)
+            return f'''Predmet {ime_predmeta} je bil uspešno ustvarjen!
+                <a href="/urnik/">Nazaj</a>'''
+        except:
+            return bottle.template(
+                'ustvari_predmet.html',
+                napaka_pri_vnosu = False,
+                predmet_ze_obstaja = True
+            )
+    except KeyError:
+        return bottle.template(
+        "ustvari_predmet.html",
+        napaka_pri_vnosu = True,
+        predmet_ze_obstaja = False
+        )
 
     
 bottle.run(reloader=True, debug=True)

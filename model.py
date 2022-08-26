@@ -254,10 +254,19 @@ class Root:
         self.uporabniki.append(Uporabnik((priimek, ime), username, password, zadnji_id + 1, instruktor_bool))
         self.shrani_uporabnike('uporabniki.json')
 
+    def preveri_obstoj_predmeta(self, ime: str, stopnja:int):
+        for predmet in self.predmeti:
+            if predmet.ime == ime and predmet.stopnja == stopnja:
+                return True
+        return False 
+
     def ustvari_predmet(self, ime:str, stopnja:int):
-        zadnji_id = self.predmeti[-1].id
-        self.predmeti.append(Predmet(ime, stopnja, zadnji_id + 1))
-        self.shrani_predmete
+        if not self.preveri_obstoj_predmeta(ime, stopnja):
+            zadnji_id = self.predmeti[-1].id
+            self.predmeti.append(Predmet(ime, stopnja, zadnji_id + 1))
+            self.shrani_predmete('predmeti.json')
+        else:
+            raise Exception('Predmet ne obstaja')
 
     def najdi_uporabnika_id(self, id: int):
         for uporabnik in self.uporabniki:

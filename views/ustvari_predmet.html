@@ -1,0 +1,22 @@
+% rebase('osnova.html')
+
+<h1>Ustvari predmet</h1>
+
+<form action="/ustvari_predmet/0/" method="post">
+    <label>Vpišite ime predmeta</label>
+    <input name="ime_predmeta" placeholder="Ime" required><br><br>
+
+
+    <label>Stopnja predmeta:</label>
+    <label><input name="stopnja" type="radio" value="0" /> Osnovna šola</label>
+    <label><input name="stopnja" type="radio" value="1" /> Srednja šola oz. gimnazija</label>
+    <label><input name="stopnja" type="radio" value="2" /> Fakulteta</label><br>
+
+    <input type="submit" value="Potrdi">
+
+    %if napaka_pri_vnosu:
+        <p style="color:red">Prosimo označite stopnjo predmeta.</p>
+    %elif predmet_ze_obstaja:
+    <p style="color:red">Ta predmet že obstaja.</p>
+    %end
+</form>
