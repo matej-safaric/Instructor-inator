@@ -1,0 +1,38 @@
+% rebase('osnova.html')
+
+<form action="/urnik" method="get">
+    <label for="instruktorji">Izberite inštruktorja:</label>
+        <select name="instruktorji" id="instruktorji">
+            %for instruktor in seznam_instruktorjev:
+                <option value="{{ instruktor.id }}"> {{instruktor}} </option>
+            %end
+        </select>
+        <input type="submit" value="Potrdi">
+</form>
+
+
+<table>
+    <tr>
+        <th> ure </th>
+        <th> PON </th>
+        <th> TOR </th>
+        <th> SRE </th>
+        <th> ČET </th>
+        <th> PET </th>
+        <th> SOB </th>
+        <th> NED </th>
+    </tr>
+    
+    %for vrstica in vrstice:
+    <tr>
+        %for celica in vrstica:
+            <td>{{celica}}</td>
+        %end
+    </tr>
+    %end
+</table>
+
+<form action="/urnik/{{ id_instruktorja }}/{{ leto_prejsnjega_tedna }}/{{ prejsnji_teden }}/" method="get"><button>Prejšnji teden</button></form>       <form action="/urnik/{{ id_instruktorja }}/{{ leto_naslednjega_tedna }}/{{ naslednji_teden }}/"><button>Naslednji teden</button></form>
+
+<h1>ODJAVA</h1>
+<form action="/odjava" method="POST"><button>odjava</button></form>

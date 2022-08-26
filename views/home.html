@@ -1,8 +1,12 @@
+% rebase('osnova.html')
+
 <h1>Instructor-inator 3000</h1>
 
 <h2>HOMEPAGE</h2>
 
 <a href="/log-in">Prijava</a>
+
+{{pristevek_tednu}}
 
 <table>
     <tr>
@@ -25,4 +29,4 @@
     %end
 </table>
 
-<form action="/"><button value="-1" name="teden">Prejšnji teden</button></form>       <form action="/"><button value="1" name="teden">Naslednji teden</button></form>
+<form action="/urnik/{{teden + 1}}"><button>Prejšnji teden</button></form>       <form action="/"><button value="1" name="teden">Naslednji teden</button></form>
