@@ -3,7 +3,7 @@
 #
 
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import json
 from typing import List
 
@@ -96,11 +96,11 @@ class Ura:
 
     def __str__(self):
         if self.stopnja_zasedenosti == 0:
-            return f'{self.cas}: za to uro ni razpisanih instrukcij'
+            return '###'
         elif self.stopnja_zasedenosti == 1:
-            return f'{self.cas}: prost termin'
+            return 'Prost termin'
         else:
-            return f'{self.cas}: {self.predmet.ime} {self.predmet.stopnja} - {self.ucenec.ime_priimek[1]} {self.ucenec.ime_priimek[0]}'
+            return 'Zasedeno'
 
     def __repr__(self):
         return(f'Ura({self.cas}, {self.stopnja_zasedenosti}, {self.predmet}, {self.ucenec}, {self.instruktor}, {self.id})')
@@ -159,8 +159,66 @@ class Root:
             'prijavljenec': self.prijavljenec.v_slovar() if self.prijavljenec != None else None
         }
 
+    def nalozi_datoteke(self, predmeti: str, uporabniki: str, ure: str):
+        """Ta funkcija prenese podatke iz .json datotek v root"""
+        with open(uporabniki, encoding='UTF-8') as dat:
+            self.uporabniki.extend([Uporabnik.iz_slovarja(slovar) for slovar in json.load(dat)])
+        with open(predmeti, encoding='UTF-8') as dat:
+            self.predmeti.extend([Predmet.iz_slovarja(slovar) for slovar in json.load(dat)])
+        with open(ure, encoding='UTF-8') as dat:
+            self.ure.extend([Ura.iz_slovarja(slovar) for slovar in json.load(dat)])
 
-        
+    def pripravi_ure(self):
+        """Ta funkcija zagotovi, da so ure za naslednje 4 tedne generirane ko se program zažene"""
+        trenutni_teden = datetime.today().isocalendar()[1]
+        trenutno_leto = datetime.today().isocalendar()[0]
+        zadnji_datum_v_sistemu = self.ure[-1].cas.date()
+        if zadnji_datum_v_sistemu < date.today():
+            for i in range(0, 28):
+                zadnji_ponedeljek = datetime.fromisocalendar(trenutno_leto, trenutni_teden, 1)
+                self.ustvari_dan_praznih_ur(zadnji_ponedeljek + timedelta(days=i))
+        else:
+            razlika_v_tednih = abs(zadnji_datum_v_sistemu.isocalendar()[1] - trenutni_teden)
+            for i in range(0, 28 - 7 * (razlika_v_tednih + 1)):
+                zadnji_ponedeljek = datetime.fromisocalendar(zadnji_datum_v_sistemu.isocalendar()[0], zadnji_datum_v_sistemu.isocalendar()[1], 1)
+                self.ustvari_dan_praznih_ur(zadnji_ponedeljek + timedelta(days=i, weeks=1))
+        self.shrani_ure('ure.json')
+
+    def pripravi_urnik_za_print(self, teden: int, instruktor: Uporabnik):
+        """Ta funkcija pripravi urnik enega tedna za enega instruktorja in ga returna kot seznam vrstic"""
+        seznam_instruktorjevih_ur = [ura for ura in self.ure if ura.instruktor == instruktor]
+        seznam_instruktorjevih_ur_v_tem_tednu = [ura for ura in seznam_instruktorjevih_ur if ura.cas.isocalendar()[1] == teden]
+        vrstice_urnika = []
+        for i in range(8, 20):
+            vrstica = f'| {i:>2}:00 |'
+            for ura in seznam_instruktorjevih_ur_v_tem_tednu:
+                if ura.cas.hour == i:
+                    if ura.stopnja_zasedenosti == 0:
+                        vrstica += '     ###     |'
+                    elif ura.stopnja_zasedenosti == 1:
+                        vrstica += ' prost termin |'
+                    else:
+                        vrstica += '   zasedeno   |'
+            vrstice_urnika.append(vrstica)
+        return vrstice_urnika
+
+    def pripravi_urnik_html_tabela(self, leto: int, teden: int, instruktor: Uporabnik):
+        """Ta funkcija naredi seznam celic za html tabelo ki prikazuje urnik enega tedna za enega instruktorja"""
+        seznam_instruktorjevih_ur = [ura for ura in self.ure if ura.instruktor.username == instruktor.username]
+        seznam_instruktorjevih_ur_v_tem_tednu = [ura for ura in seznam_instruktorjevih_ur if ura.cas.isocalendar()[1] == teden and ura.cas.isocalendar()[0] == leto]
+        celice_urnika = [[] for _ in range(12)]
+        for i in range(8, 20):
+            celice_urnika[i - 8].append(f'{i:>2}:00')
+            for ura in seznam_instruktorjevih_ur_v_tem_tednu:
+                if ura.cas.hour == i:
+                    celice_urnika[i - 8].append(ura)
+        return celice_urnika
+
+
+
+    def seznam_instruktorjev(self):
+        return [uporabnik for uporabnik in self.uporabniki if uporabnik.instruktor]
+
     def v_datoteko(self, datoteka: str):
         with open(datoteka, 'w', encoding='UTF-8') as dat:
             json.dump(self.v_slovar, dat, indent=4)
