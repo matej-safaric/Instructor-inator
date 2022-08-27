@@ -126,8 +126,11 @@ class Ura:
         slovar['id']
         )
 
-    def pocisti(self):
-        self.stopnja_zasedenosti = 0
+    def pocisti(self, izbris: bool):
+        if izbris:
+            self.stopnja_zasedenosti = 0
+        else:
+            self.stopnja_zasedenosti = 1
         self.predmet = None
         self.ucenec = None
 
