@@ -164,4 +164,58 @@ def razpolozi():
 def cancel():
     bottle.redirect("/urnik/")
 
+@bottle.get("/odpoved/<leto:int>/<teden:int>/")
+def odpoved_ur(leto=model.date.today().isocalendar()[0], teden=model.date.today().isocalendar()[1]):
+    username_instruktorja = bottle.request.get_cookie('username')
+    instruktor = root.najdi_uporabnika_username(username_instruktorja)
+    return bottle.template(
+        'odpoved.html',
+        vrstice = root.pripravi_urnik_html_tabela(leto, teden, instruktor),
+        seznam_instruktorjev = root.seznam_instruktorjev(),
+        leto = leto,
+        teden = teden
+        )
+
+@bottle.post("/odpovej/")
+def odpovej():
+    ure = bottle.request.forms.getall('ure')
+    try:
+        izbris = bottle.request.forms['izbris']
+    except:
+        izbris = False
+    uporabnik_username = bottle.request.get_cookie('username')
+    uporabnik = root.najdi_uporabnika_username(uporabnik_username)
+    if izbris:
+        for ura in ure:
+            root.najdi_uro(ura).pocisti(True)
+    else:
+        for ura in ure:
+            root.najdi_uro(ura).pocisti(False)
+    root.shrani_ure('ure.json')
+    bottle.redirect("/urnik/")
+
+@bottle.get("/osebne_ure/")
+def osebne_ure():
+    uporabnik_username = bottle.request.get_cookie('username')
+    uporabnik = root.najdi_uporabnika_username(uporabnik_username)
+    trenuten_cas = datetime.today()
+    if uporabnik.instruktor:
+        seznam_rezerviranih_instruktorjevih_ur = [ura for ura in root.ure if ura.instruktor == uporabnik and ura.stopnja_zasedenosti == 2]
+        pretekle_ure = [ura for ura in seznam_rezerviranih_instruktorjevih_ur if ura.cas + timedelta(hours=1) <= trenuten_cas]
+        prihajajoce_ure = [ura for ura in seznam_rezerviranih_instruktorjevih_ur if ura.cas + timedelta(hours=1) > trenuten_cas]
+        return bottle.template(
+            'osebne_ure_instuktor.html',
+            prihajajoce_ure = prihajajoce_ure,
+            pretekle_ure = pretekle_ure
+            )
+    else:
+        seznam_rezerviranih_strankinih_ur = [ura for ura in root.ure if ura.ucenec == uporabnik and ura.stopnja_zasedenosti == 2]
+        pretekle_ure = [ura for ura in seznam_rezerviranih_strankinih_ur if ura.cas + timedelta(hours=1) <= trenuten_cas]
+        prihajajoce_ure = [ura for ura in seznam_rezerviranih_strankinih_ur if ura.cas + timedelta(hours=1) > trenuten_cas]
+        return bottle.template(
+            'osebne_ure_ucenec.html',
+            prihajajoce_ure = prihajajoce_ure,
+            pretekle_ure = pretekle_ure
+            )
+
 bottle.run(reloader=True, debug=True)

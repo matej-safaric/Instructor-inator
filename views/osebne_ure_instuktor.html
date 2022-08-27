@@ -1,0 +1,34 @@
+% rebase('osnova.html')
+<h4>Prihodnje ure</h4>
+
+<table>
+    <tr>
+        <th>Datum in ura</th>
+        <th>Stranka</th>
+        <th>Predmet</th>
+    </tr>
+        % for ura in prihajajoce_ure:
+            <tr>
+                <td>{{ura.cas}}</td>
+                <td>{{ura.ucenec}}</td>
+                <td>{{ura.predmet}}</td>
+            </tr>
+        %end
+</table>
+
+<h4>Pretekle ure</h4>
+
+<table>
+    <tr>
+        <th>Datum in ura</th>
+        <th>Stranka</th>
+        <th>Predmet</th>
+    </tr>
+        % for ura in pretekle_ure:
+            <tr>
+                <td>{{ura.cas}}</td>
+                <td>{{ura.ucenec}}</td>
+                <td>{{ura.predmet}}</td>
+            </tr>
+        % end
+</table>
