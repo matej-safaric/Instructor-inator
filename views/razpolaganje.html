@@ -1,0 +1,38 @@
+% rebase('osnova.html')
+
+<form action="/razpolozi/" method="post">
+<table>
+    <tr>
+        <th> ure </th>
+        <th> PON </th>
+        <th> TOR </th>
+        <th> SRE </th>
+        <th> ČET </th>
+        <th> PET </th>
+        <th> SOB </th>
+        <th> NED </th>
+    </tr>
+    
+    %for vrstica in vrstice:
+    <tr>
+        %for celica in vrstica:
+            % if vrstica.index(celica) != 0 and celica.stopnja_zasedenosti == 0:
+                <td>
+                    <input type="checkbox" id="{{celica.id}}" name="ure" value="{{celica.id}}">
+                    <label for="{{celica.id}}"> {{celica}}</label>
+                </td>
+            % else:
+                <td>
+                    {{celica}}
+                </td>
+            % end
+        %end
+    </tr>
+    %end
+</table>
+<button type="submit">Potrdi</button>
+</form>
+
+<form action="/cancel/" method="post">
+    <button>Prekliči</button>
+</form>

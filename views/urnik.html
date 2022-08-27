@@ -1,6 +1,6 @@
 % rebase('osnova.html')
 
-<form action="/urnik" method="get">
+<form action="/urnik/" method="get">
     <label for="instruktorji">Izberite inštruktorja:</label>
         <select name="instruktorji" id="instruktorji">
             %for instruktor in seznam_instruktorjev:
@@ -32,7 +32,37 @@
     %end
 </table>
 
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
 <form action="/urnik/{{ id_instruktorja }}/{{ leto_prejsnjega_tedna }}/{{ prejsnji_teden }}/" method="get"><button>Prejšnji teden</button></form>       <form action="/urnik/{{ id_instruktorja }}/{{ leto_naslednjega_tedna }}/{{ naslednji_teden }}/"><button>Naslednji teden</button></form>
 
-<h1>ODJAVA</h1>
 <form action="/odjava" method="POST"><button>odjava</button></form>
+
+%if instruktor_bool:
+    <form action="/ustvari_predmet/" method="get">
+        <button>Ustvari nov predmet</button>
+    </form>
+
+    <form action="/razpolaganje/{{leto}}/{{teden}}/" method="get"><button>Razpoloži ure</button></form>
+
+    <form action="/odpoved_ure/" method="get">
+        <button>Odpovej ure</button>
+    </form>
+
+    <form action="" method="get">
+        <button>Prikaz osebnih ur</button>
+    </form>
+%else:
+    <form action="/odpoved_ure/" method="get">
+        <button>Odpovej ure</button>
+    </form>
+
+    <form action="" method="get">
+        <button>Prikaz osebnih ur</button>
+    </form>
+
+    <form action="/rezervacija/" method="get">
+        <button>Rezerviraj uro</button>
+    </form>
+%end
