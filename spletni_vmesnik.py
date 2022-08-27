@@ -159,5 +159,9 @@ def razpolozi():
     for ura in ure:
         root.najdi_uro(ura).razpolozi(uporabnik)
     return bottle.redirect("/urnik/")
-    
+
+@bottle.get("/cancel/")
+def cancel():
+    bottle.redirect("/urnik/")
+
 bottle.run(reloader=True, debug=True)
