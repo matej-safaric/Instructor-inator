@@ -138,15 +138,20 @@ def cancel():
 
 @bottle.get("/odpoved/<leto:int>/<teden:int>/")
 def odpoved_ur(leto=model.date.today().isocalendar()[0], teden=model.date.today().isocalendar()[1]):
-    username_instruktorja = bottle.request.get_cookie('username')
-    instruktor = root.najdi_uporabnika_username(username_instruktorja)
-    return bottle.template(
-        'odpoved.html',
-        vrstice = root.pripravi_urnik_html_tabela(leto, teden, instruktor),
-        seznam_instruktorjev = root.seznam_instruktorjev(),
-        leto = leto,
-        teden = teden
-        )
+    if isinstance(bottle.request.get_cookie('username'), str):
+        username_uporabnika = bottle.request.get_cookie('username')
+        uporabnik = root.najdi_uporabnika_username(username_uporabnika)
+        instruktor_bool = bottle.request.get_cookie('instruktor_bool')
+        return bottle.template(
+            'odpoved.html',
+            vrstice = root.pripravi_urnik_html_tabela_instruktor(leto, teden, uporabnik) if instruktor_bool == 'True' else root.pripravi_urnik_ucenec(leto, teden, uporabnik),
+            seznam_instruktorjev = root.seznam_instruktorjev(),
+            leto = leto,
+            teden = teden,
+            instruktor_bool = True if instruktor_bool == 'True' else False
+            )
+    else:
+        return bottle.template('niste_prijavljeni.html')
 
 @bottle.post("/odpovej/")
 def odpovej():
