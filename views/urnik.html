@@ -20,26 +20,24 @@
     </nav>
 </header>
 
-<div class="w3-sidebar w3-bar-block" style="width:25%">
-<a href="#" class="w3-bar-item w3-button">Link 1</a>
-<a href="#" class="w3-bar-item w3-button">Link 2</a>
-<a href="#" class="w3-bar-item w3-button">Link 3</a>
-</div>
 
-<div style="margin-left:25%">
-... page content ...
+<div>
+    <p><b>Prikazan urnik</b>: {{datum_ponedeljka}} - {{datum_nedelje}}</p>
 
+    <form action="/urnik/" method="get">
+        <label for="instruktorji">Izberite inštruktorja:</label>
+            <select name="instruktorji" id="instruktorji">
+                %for instruktor in seznam_instruktorjev:
+                    <option value="{{ instruktor.id }}">{{instruktor}}</option>
+                %end
+            </select>
+            <input type="submit" value="Potrdi">
+    </form>
 
-<form action="/urnik/" method="get">
-    <label for="instruktorji">Izberite inštruktorja:</label>
-        <select name="instruktorji" id="instruktorji">
-            %for instruktor in seznam_instruktorjev:
-                <option value="{{ instruktor.id }}"> {{instruktor}} </option>
-            %end
-        </select>
-        <input type="submit" value="Potrdi">
-</form>
-
+    <form method="get">
+        <button formaction="/urnik/{{ id_instruktorja }}/{{ leto_prejsnjega_tedna }}/{{ prejsnji_teden }}/">Prejsnji teden</button>
+        <button formaction="/urnik/{{ id_instruktorja }}/{{ leto_naslednjega_tedna }}/{{ naslednji_teden }}/">Naslednji teden</button>
+    </form>    
 
 <table>
     <tr>
@@ -56,53 +54,17 @@
     %for vrstica in vrstice:
     <tr>
         %for celica in vrstica:
-            <td>{{celica}}</td>
+            %if isinstance(celica, str):
+                <td style="text-align: center;">{{celica}}</td>
+            %elif celica.stopnja_zasedenosti == 0:
+                <td style="background-color: #a0a0a0; width: 200px; height: 60px;text-align: center;"></td>
+            %elif celica.stopnja_zasedenosti == 1:
+                <td style="background-color: #20c93f; width: 200px; height: 60px;text-align: center;"><b>{{celica}}</b></td>
+            %elif celica.stopnja_zasedenosti == 2:
+                <td style="background-color: #e03906; width: 200px; height: 60px;text-align: center;"><b>{{celica}}</b></td>
+            %end
         %end
     </tr>
-    %end
+    %end 
 </table>
-
-.buttons {
-    width: 200px;
-    margin: 0 auto;
-    display: inline;}
-    
-        .action_btn {
-    width: 200px;
-    margin: 0 auto;
-    display: inline;}
-
-<p>
-    <form action="/urnik/{{ id_instruktorja }}/{{ leto_prejsnjega_tedna }}/{{ prejsnji_teden }}/" method="get"><button>Prejšnji teden</button></form>       <form action="/urnik/{{ id_instruktorja }}/{{ leto_naslednjega_tedna }}/{{ naslednji_teden }}/"><button>Naslednji teden</button></form>
-</p>
-
-<form action="/odjava" method="POST"><button>odjava</button></form>
-
-%if instruktor_bool:
-    <form action="/ustvari_predmet/" method="get">
-        <button>Ustvari nov predmet</button>
-    </form>
-
-    <form action="/razpolaganje/{{leto}}/{{teden}}/" method="get"><button>Razpoloži ure</button></form>
-
-    <form action="/odpoved/{{leto}}/{{teden}}/" method="get">
-        <button>Odpovej ure</button>
-    </form>
-
-    <form action="/osebne_ure/" method="get">
-        <button>Prikaz osebnih ur</button>
-    </form>
-%else:
-    <form action="/odpoved/{{leto}}/{{teden}}/" method="get">
-        <button>Odpovej ure</button>
-    </form>
-
-    <form action="/osebne_ure/" method="get">
-        <button>Prikaz osebnih ur</button>
-    </form>
-
-    <form action="/rezervacija/{{id_instruktorja}}/{{leto}}/{{teden}}/" method="get">
-        <button>Rezerviraj uro</button>
-    </form>
-%end
 </div>
