@@ -140,15 +140,15 @@ def ustvari_predmet():
 
 @bottle.get("/razpolaganje/<leto:int>/<teden:int>/")
 def razpolozi_ure(leto=model.date.today().isocalendar()[0], teden=model.date.today().isocalendar()[1]):
-    username_instruktorja = bottle.request.get_cookie('username')
-    instruktor = root.najdi_uporabnika_username(username_instruktorja)
-    return bottle.template(
-        'razpolaganje.html',
-        vrstice = root.pripravi_urnik_html_tabela(leto, teden, instruktor),
-        seznam_instruktorjev = root.seznam_instruktorjev(),
-        leto = leto,
-        teden = teden
-        )
+        username_instruktorja = bottle.request.get_cookie('username')
+        instruktor = root.najdi_uporabnika_username(username_instruktorja)
+        return bottle.template(
+            'razpolaganje.html',
+            vrstice = root.pripravi_urnik_html_tabela_instruktor(leto, teden, instruktor),
+            seznam_instruktorjev = root.seznam_instruktorjev(),
+            leto = leto,
+            teden = teden
+            )
 
 
 @bottle.post("/razpolozi/")

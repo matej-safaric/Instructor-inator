@@ -1,6 +1,7 @@
 % rebase('osnova.html')
 <h4>Prihodnje ure</h4>
 
+% if prihajajoce_ure != []:
 <table>
     <tr>
         <th>Datum in ura</th>
@@ -15,9 +16,13 @@
             </tr>
         %end
 </table>
+% else:
+    <p>Pri naših inštruktorjih niste imeli še nobene ure.</p>
+% end
 
 <h4>Pretekle ure</h4>
 
+% if pretekle_ure != []:
 <table>
     <tr>
         <th>Datum in ura</th>
@@ -32,3 +37,10 @@
             </tr>
         % end
 </table>
+% else:
+<p>Trenutno nimate nobenih prihajajočih ur.</p>
+% end
+
+<form action="/cancel/" method="get">
+    <button>Nazaj</button>
+</form>
