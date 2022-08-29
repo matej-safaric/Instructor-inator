@@ -205,7 +205,7 @@ class Root:
             vrstice_urnika.append(vrstica)
         return vrstice_urnika
 
-    def pripravi_urnik_html_tabela(self, leto: int, teden: int, instruktor: Uporabnik):
+    def pripravi_urnik_html_tabela_instruktor(self, leto: int, teden: int, instruktor: Uporabnik):
         """Ta funkcija naredi seznam celic za html tabelo ki prikazuje urnik enega tedna za enega instruktorja"""
         seznam_instruktorjevih_ur = [ura for ura in self.ure if ura.instruktor.username == instruktor.username]
         seznam_instruktorjevih_ur_v_tem_tednu = [ura for ura in seznam_instruktorjevih_ur if ura.cas.isocalendar()[1] == teden and ura.cas.isocalendar()[0] == leto]
@@ -269,10 +269,20 @@ class Root:
                 self.ure.append(Ura((pretvorba_v_datetime), 0, None, None, instruktor, zadnji_id + (i - 8) * len(seznam_instruktorjev) + j))
         self.shrani_ure('ure.json')
 
+    def preveri_obstoj_uporabnika(self, username):
+        for uporabnik in self.uporabniki:
+            if uporabnik.username == username:
+                return True
+        return False
+
     def ustvari_uporabnika(self, ime:str, priimek:str, username:str, password:str, instruktor_bool:bool):
-        zadnji_id = self.uporabniki[-1].id
-        self.uporabniki.append(Uporabnik((priimek, ime), username, password, zadnji_id + 1, instruktor_bool))
-        self.shrani_uporabnike('uporabniki.json')
+        if not self.preveri_obstoj_uporabnika(ime, priimek, username, password, instruktor_bool):
+            zadnji_id = self.uporabniki[-1].id
+            self.uporabniki.append(Uporabnik((priimek, ime), username, password, zadnji_id + 1, instruktor_bool))
+            self.shrani_uporabnike('uporabniki.json')
+            return True
+        else:
+            return False
 
     def preveri_obstoj_predmeta(self, ime: str, stopnja:int):
         for predmet in self.predmeti:
