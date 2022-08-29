@@ -46,23 +46,23 @@
 
     <form action="/razpolaganje/{{leto}}/{{teden}}/" method="get"><button>Razpoloži ure</button></form>
 
-    <form action="/odpoved_ure/" method="get">
+    <form action="/odpoved/{{leto}}/{{teden}}/" method="get">
         <button>Odpovej ure</button>
     </form>
 
-    <form action="" method="get">
+    <form action="/osebne_ure/" method="get">
         <button>Prikaz osebnih ur</button>
     </form>
 %else:
-    <form action="/odpoved_ure/" method="get">
+    <form action="/odpoved/{{leto}}/{{teden}}/" method="get">
         <button>Odpovej ure</button>
     </form>
 
-    <form action="" method="get">
+    <form action="/osebne_ure/" method="get">
         <button>Prikaz osebnih ur</button>
     </form>
 
-    <form action="/rezervacija/" method="get">
+    <form action="/rezervacija/{{id_instruktorja}}/{{leto}}/{{teden}}/" method="get">
         <button>Rezerviraj uro</button>
     </form>
 %end
