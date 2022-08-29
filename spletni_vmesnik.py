@@ -219,5 +219,47 @@ def osebne_ure():
                 prihajajoce_ure = prihajajoce_ure,
                 pretekle_ure = pretekle_ure
                 )
+    else:
+        return bottle.template('niste_prijavljeni.html')
+
+@bottle.get('/ustvari_racun/')
+def ustvari_nov_racun_form():
+    return bottle.template('ustvari_racun.html')
+
+@bottle.post('/ustvari_racun/0/')
+def ustvari_racun():
+    ime = bottle.request.forms['ime']
+    priimek = bottle.request.forms['priimek']
+    username = bottle.request.forms['new_username']
+    password = bottle.request.forms['new_password']
+    instruktor_bool = bool(int(bottle.request.forms.getall('instruktor_bool')[0]))
+    if root.ustvari_uporabnika(ime, priimek, username, password, instruktor_bool):
+        bottle.response.set_cookie('username', username, path='/')
+        bottle.response.set_cookie('instruktor_bool', str(int(instruktor_bool)), path='/')
+        bottle.redirect('/urnik/')
+    else:
+        return '''Ta uporabnik že obstaja
+        <a href="/ustvari_racun/">Nazaj</a>'''
+
+@bottle.get('/rezervacija/<id_instruktorja:int>/<leto:int>/<teden:int>/')
+def rezervacija(id_instruktorja, leto, teden):
+    username = bottle.request.get_cookie('username')
+    instruktor = root.najdi_uporabnika_id(id_instruktorja)
+    return bottle.template(
+        'rezervacija.html',
+        vrstice = root.pripravi_urnik_html_tabela_instruktor(leto, teden, instruktor),
+        predmeti = root.predmeti
+        )
+
+@bottle.post('/rezerviraj/')
+def rezerviraj():
+    ure = bottle.request.forms.getall('ure')
+    predmet = root.najdi_predmet(bottle.request.forms['predmeti'])
+    ucenec = root.najdi_uporabnika_username(bottle.request.get_cookie('username'))
+    for ura in ure:
+        root.najdi_uro(ura).rezerviraj(predmet, ucenec)
+    root.shrani_ure('ure.json')
+    bottle.redirect('/urnik/')
+    
 
 bottle.run(reloader=True, debug=True)
