@@ -1,0 +1,15 @@
+% rebase('osnova.html')
+
+<h2>Ustvarite nov račun</h2>
+
+<form action="/ustvari_racun/0/" method="post">
+    <input name="ime" placeholder="Ime" required>
+    <input name="priimek" placeholder="Priimek" required>
+    <input name="new_username" placeholder="Uporabniško ime" required>
+    <input name="new_password" placeholder="Geslo" required>
+    <input type="radio" id="instruktor" name="instruktor_bool" value="1">
+        <label for="instruktor">Sem inštruktor</label>
+    <input type="radio" id="stranka" name="instruktor_bool" value="0">
+        <label for="stranka">Sem stranka</label>
+    <button type="submit">Ustvari račun</button>
+</form>

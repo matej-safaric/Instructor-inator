@@ -1,0 +1,44 @@
+% rebase('osnova.html')
+
+<form action="/rezerviraj/" method="post">
+    <label for="predmeti">Izberite predmet:</label>
+    <select name="predmeti" id="predmeti">
+        %for predmet in predmeti:
+            <option value="{{ predmet.id }}"> {{predmet}} </option>
+        %end
+    </select>    
+<table>
+    <tr>
+        <th> Ure </th>
+        <th> PON </th>
+        <th> TOR </th>
+        <th> SRE </th>
+        <th> ČET </th>
+        <th> PET </th>
+        <th> SOB </th>
+        <th> NED </th>
+    </tr>
+    
+    %for vrstica in vrstice:
+    <tr>
+        %for celica in vrstica:
+            % if vrstica.index(celica) != 0 and celica.stopnja_zasedenosti == 1:
+                <td>
+                    <input type="checkbox" id="{{celica.id}}" name="ure" value="{{celica.id}}">
+                    <label for="{{celica.id}}"> {{celica}}</label>
+                </td>
+            % else:
+                <td>
+                    {{celica}}
+                </td>
+            % end
+        %end
+    </tr>
+    %end
+</table>
+<button type="submit">Potrdi</button>
+</form>
+
+<form action="/cancel/" method="get">
+    <button>Prekliči</button>
+</form>
