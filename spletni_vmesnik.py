@@ -94,17 +94,19 @@ def urnik():
 
 @bottle.get("/urnik/<id_instruktorja:int>/<leto:int>/<teden:int>/")
 def urnik2(id_instruktorja, leto=model.date.today().isocalendar()[0], teden=model.date.today().isocalendar()[1]):
-    return bottle.template(
-        "urnik.html",
-        vrstice = root.pripravi_urnik_html_tabela(leto, teden, root.najdi_uporabnika_id(id_instruktorja)),
-        seznam_instruktorjev = root.seznam_instruktorjev(),
-        naslednji_teden = (date.fromisocalendar(leto, teden, 1) + timedelta(weeks=1)).isocalendar()[1],
-        leto_naslednjega_tedna = (date.fromisocalendar(leto, teden, 1) + timedelta(weeks=1)).isocalendar()[0],
-        id_instruktorja = id_instruktorja,
-        prejsnji_teden = (date.fromisocalendar(leto, teden, 1) - timedelta(weeks=1)).isocalendar()[1],
-        leto_prejsnjega_tedna = (date.fromisocalendar(leto, teden, 1) - timedelta(weeks=1)).isocalendar()[0],
-        instruktor_bool = bool(int(bottle.request.get_cookie('instruktor_bool'))),
-    )
+        return bottle.template(
+            "urnik.html",
+            vrstice = root.pripravi_urnik_html_tabela_instruktor(leto, teden, root.najdi_uporabnika_id(id_instruktorja)),
+            seznam_instruktorjev = root.seznam_instruktorjev(),
+            naslednji_teden = (date.fromisocalendar(leto, teden, 1) + timedelta(weeks=1)).isocalendar()[1],
+            leto_naslednjega_tedna = (date.fromisocalendar(leto, teden, 1) + timedelta(weeks=1)).isocalendar()[0],
+            id_instruktorja = id_instruktorja,
+            prejsnji_teden = (date.fromisocalendar(leto, teden, 1) - timedelta(weeks=1)).isocalendar()[1],
+            leto_prejsnjega_tedna = (date.fromisocalendar(leto, teden, 1) - timedelta(weeks=1)).isocalendar()[0],
+            instruktor_bool = bool(int(bottle.request.get_cookie('instruktor_bool'))),
+            teden = teden,
+            leto = leto
+        )
 
 
 
