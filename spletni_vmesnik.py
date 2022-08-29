@@ -112,11 +112,11 @@ def urnik2(id_instruktorja, leto=model.date.today().isocalendar()[0], teden=mode
 
 @bottle.get("/ustvari_predmet/")
 def ustvari_predmet_form():
-    return bottle.template(
-        "ustvari_predmet.html",
-        napaka_pri_vnosu = False,
-        predmet_ze_obstaja = False
-        )
+        return bottle.template(
+            "ustvari_predmet.html",
+            napaka_pri_vnosu = False,
+            predmet_ze_obstaja = False
+            )
 
 @bottle.post("/ustvari_predmet/0/")
 def ustvari_predmet():
