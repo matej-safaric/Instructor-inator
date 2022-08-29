@@ -1,5 +1,21 @@
 % rebase('osnova.html')
 
+<nav>
+    <a href="/urnik/">Urnik</a>
+    <a href="/osebne_ure/">Moje ure</a>
+    <a href="/odpoved/">Odpovej uro</a>
+</nav>
+
+<div class="w3-sidebar w3-bar-block" style="width:25%">
+<a href="#" class="w3-bar-item w3-button">Link 1</a>
+<a href="#" class="w3-bar-item w3-button">Link 2</a>
+<a href="#" class="w3-bar-item w3-button">Link 3</a>
+</div>
+
+<div style="margin-left:25%">
+... page content ...
+
+
 <form action="/urnik/" method="get">
     <label for="instruktorji">Izberite inštruktorja:</label>
         <select name="instruktorji" id="instruktorji">
@@ -13,7 +29,7 @@
 
 <table>
     <tr>
-        <th> ure </th>
+        <th> Ure </th>
         <th> PON </th>
         <th> TOR </th>
         <th> SRE </th>
@@ -32,10 +48,19 @@
     %end
 </table>
 
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+.buttons {
+    width: 200px;
+    margin: 0 auto;
+    display: inline;}
+    
+        .action_btn {
+    width: 200px;
+    margin: 0 auto;
+    display: inline;}
 
-
-<form action="/urnik/{{ id_instruktorja }}/{{ leto_prejsnjega_tedna }}/{{ prejsnji_teden }}/" method="get"><button>Prejšnji teden</button></form>       <form action="/urnik/{{ id_instruktorja }}/{{ leto_naslednjega_tedna }}/{{ naslednji_teden }}/"><button>Naslednji teden</button></form>
+<p>
+    <form action="/urnik/{{ id_instruktorja }}/{{ leto_prejsnjega_tedna }}/{{ prejsnji_teden }}/" method="get"><button>Prejšnji teden</button></form>       <form action="/urnik/{{ id_instruktorja }}/{{ leto_naslednjega_tedna }}/{{ naslednji_teden }}/"><button>Naslednji teden</button></form>
+</p>
 
 <form action="/odjava" method="POST"><button>odjava</button></form>
 
@@ -66,3 +91,4 @@
         <button>Rezerviraj uro</button>
     </form>
 %end
+</div>
