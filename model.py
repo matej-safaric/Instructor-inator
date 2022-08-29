@@ -217,7 +217,24 @@ class Root:
                     celice_urnika[i - 8].append(ura)
         return celice_urnika
 
-
+    def pripravi_urnik_ucenec(self, leto: int, teden: int, ucenec: Uporabnik):
+        #seznam_ucencevih_ur = [ura for ura in self.ure if ura.ucenec == ucenec]
+        seznam_ucencevih_ur = []
+        for ura in self.ure:
+            try:
+                if ura.ucenec.username == ucenec.username:
+                    seznam_ucencevih_ur.append(ura)
+            except:
+                continue
+        seznam_ucencevih_ur_ta_teden = [ura for ura in seznam_ucencevih_ur if ura.cas.isocalendar()[1] == teden and ura.cas.isocalendar()[0] == leto]
+        celice_urnika = [['', '', '', '', '', '', '', ''] for _ in range(12)]
+        for i in range(8, 20):
+            celice_urnika[i - 8][0] = f'{i:>2}:00'
+            for j in range(1, 9):
+                for ura in seznam_ucencevih_ur_ta_teden:
+                    if ura.cas.hour == i and ura.cas.isocalendar()[2] == j:
+                        celice_urnika[i - 8][j] = ura
+        return celice_urnika
 
     def seznam_instruktorjev(self):
         return [uporabnik for uporabnik in self.uporabniki if uporabnik.instruktor]
@@ -269,7 +286,7 @@ class Root:
             self.predmeti.append(Predmet(ime, stopnja, zadnji_id + 1))
             self.shrani_predmete('predmeti.json')
         else:
-            raise Exception('Predmet ne obstaja')
+            raise Exception('Predmet že obstaja')
 
     def najdi_uporabnika_id(self, id: int):
         for uporabnik in self.uporabniki:
