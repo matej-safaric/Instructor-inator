@@ -1,0 +1,73 @@
+% rebase('osnova.html')
+<h2>Moje ure</h2>
+
+<section>
+<h4>Prihodnje ure</h4>
+
+%if prihajajoce_ure != []:
+<table>
+    <tr>
+        <th>Datum in ura</th>
+        %if instruktor_bool:
+            <th>Stranka</th>
+        %else:
+            <th>Inštruktor</th>
+        %end
+        <th>Predmet</th>
+    </tr>
+        % for ura in prihajajoce_ure:
+            <tr>
+                <td>{{ura.cas}}</td>
+                %if instruktor_bool:
+                <td>{{ura.ucenec}}</td>
+                %else:
+                <td>{{ura.instruktor}}</td>
+                %end
+                <td>{{ura.predmet}}</td>
+            </tr>
+        %end
+</table>
+%else:
+    %if instruktor_bool:
+        <p>Rezervirane nimate nobene stranke. To lahko spremenite tako, da postanete popularnejsi.</p>
+    %else:
+        <p>Pri naših inštruktorjih nimate rezervirane nobene ure. Prosimo Vas, da to čim prej spremenite.</p>
+    %end
+%end
+</section>
+
+<section>
+<h4>Pretekle ure</h4>
+
+% if pretekle_ure != []:
+<table>
+    <tr>
+        <th>Datum in ura</th>
+        %if instruktor_bool:
+            <th>Stranka</th>
+        %else:
+            <th>Inštruktor</th>
+        %end
+        <th>Predmet</th>
+    </tr>
+        % for ura in pretekle_ure:
+            <tr>
+                <td>{{ura.cas}}</td>
+                %if instruktor_bool:
+                <td>{{ura.ucenec}}</td>
+                %else:
+                <td>{{ura.instruktor}}</td>
+                %end
+                <td>{{ura.predmet}}</td>
+            </tr>
+        % end
+</table>
+% else:
+    %if instruktor_bool:
+        <p>Opravili niste še nobene ure. </p>
+    %else:
+        <p>Pri naših inštruktorjih niste opravili še nobene nobene ure.</p>
+    %end
+% end
+</section>
+
