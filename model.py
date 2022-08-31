@@ -217,7 +217,7 @@ class Root:
         for i in range(8, 20):
             pretvorba_v_datetime = datetime(datum.year, datum.month, datum.day, i )
             for j, instruktor in enumerate(seznam_instruktorjev):
-                self.ure.append(Ura((pretvorba_v_datetime), 0, None, None, instruktor, zadnji_id + (i - 8) * len(seznam_instruktorjev) + j))
+                self.ure.append(Ura((pretvorba_v_datetime), 0, None, None, instruktor, zadnji_id + (i - 8) * len(seznam_instruktorjev) + j + 1))
         self.shrani_ure('ure.json')
 
     def preveri_obstoj_uporabnika(self, username):
