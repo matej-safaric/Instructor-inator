@@ -40,6 +40,9 @@ class Uporabnik:
             slovar['instruktor']
             )
 
+
+
+
 @dataclass
 class Predmet:
     ime: str
@@ -70,6 +73,8 @@ class Predmet:
             slovar['id']
             )
     
+
+
 
 @dataclass
 class Ura:
@@ -134,12 +139,17 @@ class Ura:
         self.predmet = predmet
         self.ucenec = ucenec
 
+
+
+
+
 @dataclass
 class Root:
     ure: List[Ura]
     uporabniki: List[Uporabnik]
     predmeti: List[Predmet]
 
+    #Funkcije ob zagonu programa
     def nalozi_datoteke(self, predmeti: str, uporabniki: str, ure: str):
         """Ta funkcija prenese podatke iz .json datotek v root"""
         with open(uporabniki, encoding='UTF-8') as dat:
@@ -148,6 +158,18 @@ class Root:
             self.predmeti.extend([Predmet.iz_slovarja(slovar) for slovar in json.load(dat)])
         with open(ure, encoding='UTF-8') as dat:
             self.ure.extend([Ura.iz_slovarja(slovar) for slovar in json.load(dat)])
+
+
+    def ustvari_dan_praznih_ur(self, datum:date):
+        '''V root doda 12 praznih ur dolgih 60min, ki skupaj tvorijo en delovni dan.'''
+        zadnji_id = self.ure[-1].id
+        seznam_instruktorjev = [uporabnik for uporabnik in self.uporabniki if uporabnik.instruktor]
+        for i in range(8, 20):
+            pretvorba_v_datetime = datetime(datum.year, datum.month, datum.day, i )
+            for j, instruktor in enumerate(seznam_instruktorjev):
+                self.ure.append(Ura((pretvorba_v_datetime), 0, None, None, instruktor, zadnji_id + (i - 8) * len(seznam_instruktorjev) + j + 1))
+        self.shrani_ure('ure.json')
+
 
     def pripravi_ure(self):
         """Ta funkcija zagotovi, da so ure za naslednje 4 tedne generirane ko se program zažene"""
@@ -165,7 +187,10 @@ class Root:
                 self.ustvari_dan_praznih_ur(zadnji_ponedeljek + timedelta(days=i, weeks=1))
         self.shrani_ure('ure.json')
 
-    def pripravi_urnik_html_tabela_instruktor(self, leto: int, teden: int, instruktor: Uporabnik):
+
+
+    #Funkcije za pripravo html urnikov
+    def pripravi_urnik_instruktorja(self, leto: int, teden: int, instruktor: Uporabnik):
         """Ta funkcija naredi seznam celic za html tabelo ki prikazuje urnik enega tedna za enega instruktorja"""
         seznam_instruktorjevih_ur = [ura for ura in self.ure if ura.instruktor.username == instruktor.username]
         seznam_instruktorjevih_ur_v_tem_tednu = [ura for ura in seznam_instruktorjevih_ur if ura.cas.isocalendar()[1] == teden and ura.cas.isocalendar()[0] == leto]
@@ -177,8 +202,9 @@ class Root:
                     celice_urnika[i - 8].append(ura)
         return celice_urnika
 
-    def pripravi_urnik_ucenec(self, leto: int, teden: int, ucenec: Uporabnik):
-        #seznam_ucencevih_ur = [ura for ura in self.ure if ura.ucenec == ucenec]
+
+    def pripravi_urnik_ucenca(self, leto: int, teden: int, ucenec: Uporabnik):
+        '''Pripravi seznam celic za html tabelo, ki prikazuje vse rezervirane ure enega učenca'''
         seznam_ucencevih_ur = []
         for ura in self.ure:
             try:
@@ -196,9 +222,12 @@ class Root:
                         celice_urnika[i - 8][j] = ura
         return celice_urnika
 
+
     def seznam_instruktorjev(self):
         return [uporabnik for uporabnik in self.uporabniki if uporabnik.instruktor]
 
+
+    #Funkcije za shranjevanje v .json
     def shrani_ure(self, datoteka: str):
         with open(datoteka, 'w', encoding='UTF-8') as dat:
             json.dump([ura.v_slovar() for ura in self.ure], dat, indent=4)
@@ -211,21 +240,22 @@ class Root:
         with open(datoteka, 'w', encoding='UTF-8') as dat:
             json.dump([predmet.v_slovar() for predmet in self.predmeti], dat, indent=4)
 
-    def ustvari_dan_praznih_ur(self, datum:date):
-        zadnji_id = self.ure[-1].id
-        seznam_instruktorjev = [uporabnik for uporabnik in self.uporabniki if uporabnik.instruktor]
-        for i in range(8, 20):
-            pretvorba_v_datetime = datetime(datum.year, datum.month, datum.day, i )
-            for j, instruktor in enumerate(seznam_instruktorjev):
-                self.ure.append(Ura((pretvorba_v_datetime), 0, None, None, instruktor, zadnji_id + (i - 8) * len(seznam_instruktorjev) + j + 1))
-        self.shrani_ure('ure.json')
 
+    #Funkcije za preverjanje obstoja objektov v sistemu
     def preveri_obstoj_uporabnika(self, username):
         for uporabnik in self.uporabniki:
             if uporabnik.username == username:
                 return True
         return False
 
+    def preveri_obstoj_predmeta(self, ime: str, stopnja:int):
+        for predmet in self.predmeti:
+            if predmet.ime.lower().strip() == ime.lower().strip() and predmet.stopnja == stopnja:
+                return True
+        return False 
+
+
+    #Funkcije za ustvarjanje objektov
     def ustvari_uporabnika(self, ime:str, priimek:str, username:str, password:str, instruktor_bool:bool):
         if not self.preveri_obstoj_uporabnika(username):
             zadnji_id = self.uporabniki[-1].id
@@ -235,12 +265,6 @@ class Root:
         else:
             return False
 
-    def preveri_obstoj_predmeta(self, ime: str, stopnja:int):
-        for predmet in self.predmeti:
-            if predmet.ime.lower().strip() == ime.lower().strip() and predmet.stopnja == stopnja:
-                return True
-        return False 
-
     def ustvari_predmet(self, ime:str, stopnja:int):
         if not self.preveri_obstoj_predmeta(ime, stopnja):
             zadnji_id = self.predmeti[-1].id
@@ -249,6 +273,8 @@ class Root:
         else:
             raise Exception('Predmet že obstaja')
 
+
+    #Funkcije za iskanje objektov v sistemu
     def najdi_uporabnika_id(self, id: int):
         for uporabnik in self.uporabniki:
             if uporabnik.id == id:
@@ -258,15 +284,6 @@ class Root:
         for uporabnik in self.uporabniki:
             if uporabnik.username == username:
                 return uporabnik
-
-    def preveri_prijavo(self, username: str, password: str):
-        for uporabnik in self.uporabniki:
-            if uporabnik.username == username:
-                if uporabnik.password == password:
-                    return (uporabnik, True)
-                else:
-                    return (uporabnik, False)
-        return (None, False)
 
     def najdi_predmet(self, id: int):
         id = int(id)
@@ -279,3 +296,14 @@ class Root:
         for ura in self.ure:
             if ura.id == id:
                 return ura 
+
+
+    #Preverjanje prijave
+    def preveri_prijavo(self, username: str, password: str):
+        for uporabnik in self.uporabniki:
+            if uporabnik.username == username:
+                if uporabnik.password == password:
+                    return (uporabnik, True)
+                else:
+                    return (uporabnik, False)
+        return (None, False)
