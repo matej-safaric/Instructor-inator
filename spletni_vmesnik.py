@@ -2,6 +2,16 @@ import bottle
 import model
 from datetime import date, timedelta, datetime
 
+def vrni_instruktor_bool():
+    return bool(int(bottle.request.get_cookie('instruktor_bool')))
+
+def poskusi_vrniti_id_instruktorja():
+    try:
+        id_instruktorja = bottle.request.query['instruktorji']
+    except KeyError:
+        id_instruktorja = 1
+    return id_instruktorja
+
 root = model.Root([], [], [], False, None)
 print('Nalagam datoteke...')
 root.nalozi_datoteke('predmeti.json', 'uporabniki.json', 'ure.json')
