@@ -163,7 +163,7 @@ class Root:
     def ustvari_dan_praznih_ur(self, datum:date):
         '''V root doda 12 praznih ur dolgih 60min, ki skupaj tvorijo en delovni dan.'''
         zadnji_id = self.ure[-1].id
-        seznam_instruktorjev = [uporabnik for uporabnik in self.uporabniki if uporabnik.instruktor]
+        seznam_instruktorjev = self.seznam_instruktorjev()
         for i in range(8, 20):
             pretvorba_v_datetime = datetime(datum.year, datum.month, datum.day, i )
             for j, instruktor in enumerate(seznam_instruktorjev):
