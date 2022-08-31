@@ -227,7 +227,7 @@ class Root:
         return False
 
     def ustvari_uporabnika(self, ime:str, priimek:str, username:str, password:str, instruktor_bool:bool):
-        if not self.preveri_obstoj_uporabnika(ime, priimek, username, password, instruktor_bool):
+        if not self.preveri_obstoj_uporabnika(username):
             zadnji_id = self.uporabniki[-1].id
             self.uporabniki.append(Uporabnik((priimek, ime), username, password, zadnji_id + 1, instruktor_bool))
             self.shrani_uporabnike('uporabniki.json')
