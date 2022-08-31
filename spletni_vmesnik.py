@@ -17,7 +17,14 @@ print('Nalagam datoteke...')
 root.nalozi_datoteke('predmeti.json', 'uporabniki.json', 'ure.json')
 print('Ustvarjam ure...')
 root.pripravi_ure()
-print('Pripravljeno!')
+
+@bottle.get("/")
+def zacetna_stran():
+    return bottle.template(
+        "zacetna_stran.html",
+        uporabnik_ne_obstaja = False,
+        napacno_geslo = False
+        )
 
 @bottle.post('/prijava/')
 def prijava():
@@ -25,9 +32,17 @@ def prijava():
     password = bottle.request.forms.getunicode('password')
     (uporabnik, uspesnost_prijave) = root.preveri_prijavo(username, password)
     if uporabnik == None:
-        return bottle.template('neobstojec_uporabnik.html')
+        return bottle.template(
+            'zacetna_stran.html',
+            uporabnik_ne_obstaja = True,
+            napacno_geslo = False
+            )
     elif not uspesnost_prijave:
-        return bottle.template('napacno_geslo.html')
+        return bottle.template(
+            'zacetna_stran.html',
+            uporabnik_ne_obstaja = False,
+            napacno_geslo = True
+            )
     else:
         instruktor_bool = '1' if uporabnik.instruktor else '0'
         bottle.response.set_cookie('username', username, path='/')
