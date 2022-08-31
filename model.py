@@ -285,7 +285,7 @@ class Root:
 
     def preveri_obstoj_predmeta(self, ime: str, stopnja:int):
         for predmet in self.predmeti:
-            if predmet.ime == ime and predmet.stopnja == stopnja:
+            if predmet.ime.lower().strip() == ime.lower().strip() and predmet.stopnja == stopnja:
                 return True
         return False 
 

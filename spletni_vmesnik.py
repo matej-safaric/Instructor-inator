@@ -117,13 +117,20 @@ def ustvari_predmet():
         stopnja = int(bottle.request.forms['stopnja'])
         try:
             root.ustvari_predmet(ime_predmeta, stopnja)
-            return f'''Predmet {ime_predmeta} je bil uspešno ustvarjen!
-                <a href="/urnik/">Nazaj</a>'''
+            return bottle.template(
+                'ustvari_predmet.html',
+                napaka_pri_vnosu = False,
+                predmet_ze_obstaja = False,
+                uspesnost = True,
+                instruktor_bool = vrni_instruktor_bool(),
+                id_instruktorja = poskusi_vrniti_id_instruktorja()
+            )
         except:
             return bottle.template(
                 'ustvari_predmet.html',
                 napaka_pri_vnosu = False,
                 predmet_ze_obstaja = True,
+                uspesnost = True,
                 instruktor_bool = vrni_instruktor_bool(),
                 id_instruktorja = poskusi_vrniti_id_instruktorja()
             )
@@ -132,6 +139,7 @@ def ustvari_predmet():
         "ustvari_predmet.html",
         napaka_pri_vnosu = True,
         predmet_ze_obstaja = False,
+        uspesnost = True,
         instruktor_bool = vrni_instruktor_bool(),
         id_instruktorja = poskusi_vrniti_id_instruktorja()
         )
