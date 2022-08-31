@@ -160,7 +160,7 @@ def razpolozi():
     uporabnik_username = bottle.request.get_cookie('username')
     uporabnik = root.najdi_uporabnika_username(uporabnik_username)
     for ura in ure:
-        root.najdi_uro(ura).razpolozi(uporabnik)
+        root.najdi_uro(int(ura)).razpolozi()
     root.shrani_ure('ure.json')
     bottle.redirect("/urnik/")
 

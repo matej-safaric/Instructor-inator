@@ -134,9 +134,8 @@ class Ura:
         self.predmet = None
         self.ucenec = None
 
-    def razpolozi(self, instruktor: Uporabnik):
+    def razpolozi(self):
         self.stopnja_zasedenosti = 1
-        self.instruktor = instruktor
         self.ucenec = None
         self.predmet = None
 
