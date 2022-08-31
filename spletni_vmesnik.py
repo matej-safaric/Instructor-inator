@@ -25,9 +25,9 @@ def prijava():
     password = bottle.request.forms.getunicode('password')
     (uporabnik, uspesnost_prijave) = root.preveri_prijavo(username, password)
     if uporabnik == None:
-        return 'Ta uporabnik ne obstaja'
+        return bottle.template('neobstojec_uporabnik.html')
     elif not uspesnost_prijave:
-        return 'Vpisali ste napacno geslo'
+        return bottle.template('napacno_geslo.html')
     else:
         instruktor_bool = '1' if uporabnik.instruktor else '0'
         bottle.response.set_cookie('username', username, path='/')
