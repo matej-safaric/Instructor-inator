@@ -73,7 +73,9 @@ def urnik2(id_instruktorja, leto=model.date.today().isocalendar()[0], teden=mode
             leto_prejsnjega_tedna = (date.fromisocalendar(leto, teden, 1) - timedelta(weeks=1)).isocalendar()[0],
             instruktor_bool = vrni_instruktor_bool(),
             teden = teden,
-            leto = leto
+            leto = leto,
+            datum_ponedeljka = date.fromisocalendar(leto, teden, 1),
+            datum_nedelje = date.fromisocalendar(leto, teden, 7)
         )
     else:
         return bottle.template('niste_prijavljeni.html')
