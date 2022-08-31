@@ -2,6 +2,9 @@ import bottle
 import model
 from datetime import date, timedelta, datetime
 
+
+
+
 def vrni_instruktor_bool():
     return bool(int(bottle.request.get_cookie('instruktor_bool')))
 
@@ -12,11 +15,14 @@ def poskusi_vrniti_id_instruktorja():
         id_instruktorja = 1
     return id_instruktorja
 
+
+
+
 root = model.Root([], [], [], False, None)
-print('Nalagam datoteke...')
 root.nalozi_datoteke('predmeti.json', 'uporabniki.json', 'ure.json')
-print('Ustvarjam ure...')
 root.pripravi_ure()
+
+
 
 @bottle.get("/")
 def zacetna_stran():
@@ -49,12 +55,6 @@ def prijava():
         bottle.response.set_cookie('instruktor_bool', instruktor_bool, path='/')
         bottle.redirect('/urnik/')
 
-@bottle.get("/log-in/")
-def log_in():
-    return bottle.template(
-        'log-in.html'
-    )
-
 @bottle.post("/odjava")
 def odjava():
     bottle.response.delete_cookie('username', path="/")
@@ -62,12 +62,7 @@ def odjava():
     bottle.redirect("/")
 
 
-@bottle.get("/")
-def zacetna_stran():
-    return bottle.template(
-        "zacetna_stran.html",
-        seznam_instruktorjev = root.seznam_instruktorjev()
-        )
+
 
 @bottle.get("/urnik/")
 def urnik():
@@ -79,7 +74,7 @@ def urnik2(id_instruktorja, leto=model.date.today().isocalendar()[0], teden=mode
     if isinstance(bottle.request.get_cookie('username'), str):
         return bottle.template(
             "urnik.html",
-            vrstice = root.pripravi_urnik_html_tabela_instruktor(leto, teden, root.najdi_uporabnika_id(id_instruktorja)),
+            vrstice = root.pripravi_urnik_instruktorja(leto, teden, root.najdi_uporabnika_id(id_instruktorja)),
             seznam_instruktorjev = root.seznam_instruktorjev(),
             naslednji_teden = (date.fromisocalendar(leto, teden, 1) + timedelta(weeks=1)).isocalendar()[1],
             leto_naslednjega_tedna = (date.fromisocalendar(leto, teden, 1) + timedelta(weeks=1)).isocalendar()[0],
@@ -97,6 +92,7 @@ def urnik2(id_instruktorja, leto=model.date.today().isocalendar()[0], teden=mode
 
 
 
+
 @bottle.get("/ustvari_predmet/")
 def ustvari_predmet_form():
     if isinstance(bottle.request.get_cookie('username'), str):
@@ -104,6 +100,7 @@ def ustvari_predmet_form():
             "ustvari_predmet.html",
             napaka_pri_vnosu = False,
             predmet_ze_obstaja = False,
+            uspesnost = True,
             instruktor_bool = vrni_instruktor_bool(),
             id_instruktorja = poskusi_vrniti_id_instruktorja()
             )
@@ -144,6 +141,9 @@ def ustvari_predmet():
         id_instruktorja = poskusi_vrniti_id_instruktorja()
         )
 
+
+
+
 @bottle.get("/razpolaganje/<leto:int>/<teden:int>/")
 def razpolozi_ure(leto=model.date.today().isocalendar()[0], teden=model.date.today().isocalendar()[1]):
     if isinstance(bottle.request.get_cookie('username'), str):
@@ -151,7 +151,7 @@ def razpolozi_ure(leto=model.date.today().isocalendar()[0], teden=model.date.tod
         instruktor = root.najdi_uporabnika_username(username_instruktorja)
         return bottle.template(
             'razpolaganje.html',
-            vrstice = root.pripravi_urnik_html_tabela_instruktor(leto, teden, instruktor),
+            vrstice = root.pripravi_urnik_instruktorja(leto, teden, instruktor),
             seznam_instruktorjev = root.seznam_instruktorjev(),
             leto = leto,
             teden = teden,
@@ -172,9 +172,15 @@ def razpolozi():
     root.shrani_ure('ure.json')
     bottle.redirect("/urnik/")
 
+
+
+
 @bottle.get("/cancel/")
 def cancel():
     bottle.redirect("/urnik/")
+
+
+
 
 @bottle.get("/odpoved/<leto:int>/<teden:int>/")
 def odpoved_ur(leto=model.date.today().isocalendar()[0], teden=model.date.today().isocalendar()[1]):
@@ -184,7 +190,7 @@ def odpoved_ur(leto=model.date.today().isocalendar()[0], teden=model.date.today(
         instruktor_bool = vrni_instruktor_bool()
         return bottle.template(
             'odpoved.html',
-            vrstice = root.pripravi_urnik_html_tabela_instruktor(leto, teden, uporabnik) if instruktor_bool == 'True' else root.pripravi_urnik_ucenec(leto, teden, uporabnik),
+            vrstice = root.pripravi_urnik_instruktorja(leto, teden, uporabnik) if instruktor_bool else root.pripravi_urnik_ucenca(leto, teden, uporabnik),
             seznam_instruktorjev = root.seznam_instruktorjev(),
             leto = leto,
             teden = teden,
@@ -212,6 +218,9 @@ def odpovej():
     root.shrani_ure('ure.json')
     bottle.redirect("/urnik/")
 
+
+
+
 @bottle.get("/osebne_ure/")
 def osebne_ure():
     if isinstance(bottle.request.get_cookie('username'), str):
@@ -230,6 +239,9 @@ def osebne_ure():
                 )
     else:
         return bottle.template('niste_prijavljeni.html')
+
+
+
 
 @bottle.get('/ustvari_racun/')
 def ustvari_nov_racun_form():
@@ -250,13 +262,15 @@ def ustvari_racun():
         return '''Ta uporabnik že obstaja
         <a href="/ustvari_racun/">Nazaj</a>'''
 
+
+
+
 @bottle.get('/rezervacija/<id_instruktorja:int>/<leto:int>/<teden:int>/')
 def rezervacija(id_instruktorja, leto, teden):
-    username = bottle.request.get_cookie('username')
     instruktor = root.najdi_uporabnika_id(id_instruktorja)
     return bottle.template(
         'rezervacija.html',
-        vrstice = root.pripravi_urnik_html_tabela_instruktor(leto, teden, instruktor),
+        vrstice = root.pripravi_urnik_instruktorja(leto, teden, instruktor),
         predmeti = root.predmeti,
         id_instruktorja = poskusi_vrniti_id_instruktorja(),
         instruktor_bool = vrni_instruktor_bool(),
