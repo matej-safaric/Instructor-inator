@@ -197,8 +197,6 @@ def odpovej():
         izbris = bottle.request.forms['izbris']
     except:
         izbris = False
-    uporabnik_username = bottle.request.get_cookie('username')
-    uporabnik = root.najdi_uporabnika_username(uporabnik_username)
     if izbris:
         for ura in ure:
             root.najdi_uro(ura).pocisti(True)
@@ -218,7 +216,10 @@ def osebne_ure():
         uporabnik = root.najdi_uporabnika_username(uporabnik_username)
         trenuten_cas = datetime.today()
         instruktor_bool = vrni_instruktor_bool()
-        seznam_rezerviranih_uporabnikovih_ur = [ura for ura in root.ure if ura.instruktor == uporabnik and ura.stopnja_zasedenosti == 2] if instruktor_bool else [ura for ura in root.ure if ura.ucenec == uporabnik and ura.stopnja_zasedenosti == 2]
+        if instruktor_bool:
+            seznam_rezerviranih_uporabnikovih_ur = [ura for ura in root.ure if ura.instruktor == uporabnik and ura.stopnja_zasedenosti == 2]
+        else:
+            seznam_rezerviranih_uporabnikovih_ur = [ura for ura in root.ure if ura.ucenec == uporabnik and ura.stopnja_zasedenosti == 2]
         pretekle_ure = [ura for ura in seznam_rezerviranih_uporabnikovih_ur if ura.cas + timedelta(hours=1) <= trenuten_cas]
         prihajajoce_ure = [ura for ura in seznam_rezerviranih_uporabnikovih_ur if ura.cas + timedelta(hours=1) > trenuten_cas]
         return bottle.template(
@@ -287,5 +288,5 @@ def cancel():
     bottle.redirect("/urnik/")
 
 
-    
+
 bottle.run(reloader=True, debug=True)
