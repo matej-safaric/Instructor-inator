@@ -39,6 +39,9 @@
         <button formaction="/urnik/{{ id_instruktorja }}/{{ leto_naslednjega_tedna }}/{{ naslednji_teden }}/">Naslednji teden</button>
     </form>    
 
+%if len(vrstice[0]) <= 1:
+    <p>Ta teden ni na voljo.</p>
+%else:    
 <table>
     <tr>
         <th> Ure </th>
@@ -67,4 +70,5 @@
     </tr>
     %end 
 </table>
+%end
 </div>
