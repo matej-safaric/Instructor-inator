@@ -41,14 +41,16 @@
         <tr>
             %for celica in vrstica:
                 % if celica == '':
-                    <td>
-                        {{celica}}
+                    <td style="width: 100px; height: 100px;text-align: center;">
+                        
                     </td> 
                 % elif vrstica.index(celica) != 0 and (celica.stopnja_zasedenosti == 2 or celica.stopnja_zasedenosti == 1):
-                    <td>
+                    <td style="width: 100px; height: 100px;text-align: center;">
                         <input type="checkbox" id="{{celica.id}}" name="ure" value="{{celica.id}}">
                         <label for="{{celica.id}}"> {{celica}}</label>
                     </td>
+                %else:
+                    <td style="width: 100px; height: 100px;text-align: center;">{{celica}}</td>
                 % end
             %end
         </tr>
@@ -58,9 +60,9 @@
         <tr>
             % for celica in vrstica:
                 %if celica == '' or vrstica.index(celica) == 0:
-                    <td>{{celica}}</td>
+                    <td style="width: 100px; height: 100px;text-align: center;">{{celica}}</td>
                 %else:
-                    <td>
+                    <td style="width: 100px; height: 100px;text-align: center;">
                         <input type="checkbox" id="{{celica.id}}" name="ure" value="{{celica.id}}">
                         <label for="{{celica.id}}"> {{celica.predmet}}<br> {{celica.instruktor}}</label>
                     </td>
@@ -73,8 +75,8 @@
 
 
 % if instruktor_bool:
-    <input type="checkbox" id="izbris" name="izbris" value="1">
-        <label for="izbris">Želim da se te ure počistijo in postanejo nedosegljive strankam</label>
+    
+        <label for="izbris"><input type="checkbox" id="izbris" name="izbris" value="1"> Želim da se te ure počistijo in postanejo nedosegljive strankam</label>
 % end
 
 <button type="submit">Potrdi</button>
