@@ -4,8 +4,14 @@
 
 
 <form action="/prijava/" method="POST">
-    <input name="username" placeholder="Uporabniško ime" autocomplete="off">
-    <input name="password" placeholder="Geslo" autocomplete="off">
+    <input name="username" placeholder="Uporabniško ime" autocomplete="off" required>
+    <input name="password" placeholder="Geslo" autocomplete="off" required>
+    %if uporabnik_ne_obstaja:
+        <p style="color:red">Ta uporabnik ne obstaja</p>
+    %elif napacno_geslo:
+    <p style="color:red">Napačno geslo</p>
+    %end
+
     <button> Potrditev </button>
 </form>
 
