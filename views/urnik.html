@@ -1,25 +1,25 @@
 % rebase('osnova.html')
+
 <header>
-    <h1>Urnik</h1>
-    <nav>
-        <a href="/urnik/">Urnik</a>
-        <a href="/osebne_ure/">Moje ure</a>
-        <a href="/odpoved/{{leto}}/{{teden}}/">Odpovej uro</a>
-        %if instruktor_bool:
-            <a href="/razpolaganje/{{leto}}/{{teden}}/">Razpoloži ure</a>
-            <a href="/ustvari_predmet/">Ustvari nov predmet</a>
-        %else:
-            <a href="/rezervacija/{{id_instruktorja}}/{{leto}}/{{teden}}/">Rezerviraj uro</a>
-        %end
+    <h1>Instructor-inator</h1>
+  <nav>
+      <a href="/urnik/">Urnik</a>
+      <a href="/osebne_ure/">Moje ure</a>
+      <a href="/odpoved/{{leto}}/{{teden}}/">Odpovej uro</a>
+      %if instruktor_bool:
+          <a href="/razpolaganje/{{leto}}/{{teden}}/">Razpoloži ure</a>
+          <a href="/ustvari_predmet/">Ustvari nov predmet</a>
+      %else:
+          <a href="/rezervacija/{{id_instruktorja}}/{{leto}}/{{teden}}/">Rezerviraj uro</a>
+      %end
 
-        <form action="/odjava" method="POST" style="text-align: center; float: right;">
-            <button style="background-color: #29b5a4; position: relative; text-align: center; position: absolute; right: 40px; top: 2%;">
-                <b>&#128682; Odjava</b>
-            </button>
-        </form>
-    </nav>
-</header>
-
+      <form action="/odjava" method="POST" style="text-align: center; float: right;">
+          <button style="background-color: #29b5a4; position: relative; text-align: center; position: absolute; right: 40px; top: 2%;">
+              <b>&#128682; Odjava</b>
+          </button>
+      </form>
+  </nav>
+  </header>
 
 <div>
     <p><b>Prikazan urnik</b>: {{datum_ponedeljka}} - {{datum_nedelje}}</p>

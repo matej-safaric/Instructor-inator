@@ -1,5 +1,19 @@
 % rebase('osnova.html')
 
+<header>
+    <h1>Instructor-inator</h1>
+  <nav>
+      <a href="/urnik/">Urnik</a>
+      <a href="/osebne_ure/">Moje ure</a>
+
+      <form action="/odjava" method="POST" style="text-align: center; float: right;">
+          <button style="background-color: #29b5a4; position: relative; text-align: center; position: absolute; right: 40px; top: 2%;">
+              <b>&#128682; Odjava</b>
+          </button>
+      </form>
+  </nav>
+  </header>
+
 <form action="/rezerviraj/" method="post">
     <label for="predmeti">Izberite predmet:</label>
     <select name="predmeti" id="predmeti">
