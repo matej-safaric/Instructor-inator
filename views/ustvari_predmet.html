@@ -34,6 +34,8 @@
     %if napaka_pri_vnosu:
         <p style="color:red">Prosimo označite stopnjo predmeta.</p>
     %elif predmet_ze_obstaja:
-    <p style="color:red">Ta predmet že obstaja.</p>
+        <p style="color:red">Ta predmet že obstaja.</p>
+    %elif uspesnost:
+        <p style="color: #5ac900;">Predmet je bil uspešno ustvarjen!</p>
     %end
 </form>
