@@ -10,4 +10,11 @@
         <label for="instruktor"><input type="radio" id="instruktor" name="instruktor_bool" value="1">  Sem inštruktor</label>
         <label for="stranka"><input type="radio" id="stranka" name="instruktor_bool" value="0">  Sem stranka</label>
     <button type="submit">Ustvari račun</button>
+    %if uporabnik_ze_obstaja:
+    <p style="color: red;">Ta uporabnik že obstaja</p>
+    %end
+</form>
+
+<form action="/" method="get">
+    <button>Prekliči</button>
 </form>
