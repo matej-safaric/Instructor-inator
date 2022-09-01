@@ -14,6 +14,8 @@
   </nav>
   </header>
 
+<h2>Rezervacija ur</h2>
+
 <form action="/rezerviraj/" method="post">
     <label for="predmeti">Izberite predmet:</label>
     <select name="predmeti" id="predmeti">
@@ -37,12 +39,12 @@
     <tr>
         %for celica in vrstica:
             % if vrstica.index(celica) != 0 and celica.stopnja_zasedenosti == 1:
-                <td>
+                <td style="width: 100px; height: 100px;text-align: center;">
                     <input type="checkbox" id="{{celica.id}}" name="ure" value="{{celica.id}}">
                     <label for="{{celica.id}}"> {{celica}}</label>
                 </td>
             % else:
-                <td>
+                <td style="width: 100px; height: 100px;text-align: center;">
                     {{celica}}
                 </td>
             % end

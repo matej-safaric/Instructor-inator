@@ -8603,22 +8603,9 @@
     },
     {
         "cas": "2022-08-29T08:00:00",
-        "stopnja_zasedenosti": 2,
-        "predmet": {
-            "ime": "Azijske pismenke in druge globalisti\u010dne izmi\u0161ljotine",
-            "stopnja": 2,
-            "id": 6
-        },
-        "ucenec": {
-            "ime_priimek": [
-                "Alfi",
-                "Snific"
-            ],
-            "username": "Ucko",
-            "password": "4321",
-            "id": 2,
-            "instruktor": false
-        },
+        "stopnja_zasedenosti": 0,
+        "predmet": null,
+        "ucenec": null,
         "instruktor": {
             "ime_priimek": [
                 "Safaric",
@@ -8650,22 +8637,9 @@
     },
     {
         "cas": "2022-08-29T09:00:00",
-        "stopnja_zasedenosti": 2,
-        "predmet": {
-            "ime": "Azijske pismenke in druge globalisti\u010dne izmi\u0161ljotine",
-            "stopnja": 2,
-            "id": 6
-        },
-        "ucenec": {
-            "ime_priimek": [
-                "Alfi",
-                "Snific"
-            ],
-            "username": "Ucko",
-            "password": "4321",
-            "id": 2,
-            "instruktor": false
-        },
+        "stopnja_zasedenosti": 0,
+        "predmet": null,
+        "ucenec": null,
         "instruktor": {
             "ime_priimek": [
                 "Safaric",
@@ -9037,22 +9011,9 @@
     },
     {
         "cas": "2022-08-30T08:00:00",
-        "stopnja_zasedenosti": 2,
-        "predmet": {
-            "ime": "Azijske pismenke in druge globalisti\u010dne izmi\u0161ljotine",
-            "stopnja": 2,
-            "id": 6
-        },
-        "ucenec": {
-            "ime_priimek": [
-                "Alfi",
-                "Snific"
-            ],
-            "username": "Ucko",
-            "password": "4321",
-            "id": 2,
-            "instruktor": false
-        },
+        "stopnja_zasedenosti": 0,
+        "predmet": null,
+        "ucenec": null,
         "instruktor": {
             "ime_priimek": [
                 "Safaric",
@@ -9084,7 +9045,7 @@
     },
     {
         "cas": "2022-08-30T09:00:00",
-        "stopnja_zasedenosti": 1,
+        "stopnja_zasedenosti": 0,
         "predmet": null,
         "ucenec": null,
         "instruktor": {
@@ -9458,7 +9419,7 @@
     },
     {
         "cas": "2022-08-31T08:00:00",
-        "stopnja_zasedenosti": 1,
+        "stopnja_zasedenosti": 0,
         "predmet": null,
         "ucenec": null,
         "instruktor": {
@@ -9492,7 +9453,7 @@
     },
     {
         "cas": "2022-08-31T09:00:00",
-        "stopnja_zasedenosti": 1,
+        "stopnja_zasedenosti": 0,
         "predmet": null,
         "ucenec": null,
         "instruktor": {
