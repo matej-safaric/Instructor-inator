@@ -1,17 +1,47 @@
 [
     {
-        "ime": "matematika",
+        "ime": "Matematika",
         "stopnja": 1,
         "id": 1
     },
     {
-        "ime": "fizika",
+        "ime": "Matematika",
+        "stopnja": 2,
+        "id": 3
+    },
+    {
+        "ime": "Fizika",
         "stopnja": 2,
         "id": 2
     },
     {
-        "ime": "matematika",
+        "ime": "Biti pismono\u0161a 101",
+        "stopnja": 0,
+        "id": 4
+    },
+    {
+        "ime": "\"Sloven\u0161\u010dina\"",
+        "stopnja": 1,
+        "id": 5
+    },
+    {
+        "ime": "Azijske pismenke in druge globalisti\u010dne izmi\u0161ljotine",
         "stopnja": 2,
-        "id": 3
+        "id": 6
+    },
+    {
+        "ime": "Osnove istrijan\u0161\u010dine",
+        "stopnja": 1,
+        "id": 7
+    },
+    {
+        "ime": "Fizika",
+        "stopnja": 0,
+        "id": 8
+    },
+    {
+        "ime": "Fizika",
+        "stopnja": 0,
+        "id": 9
     }
 ]

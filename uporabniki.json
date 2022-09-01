@@ -21,22 +21,32 @@
     },
     {
         "ime_priimek": [
-            "\u010cernigoj",
-            "Lana"
+            "Natas",
+            "Sevil"
         ],
-        "username": "booboo",
-        "password": "booboo1",
+        "username": "sevilski_brivec666",
+        "password": "666",
         "id": 3,
+        "instruktor": false
+    },
+    {
+        "ime_priimek": [
+            "Pipak",
+            "Lignjoslav"
+        ],
+        "username": "LignjoslavPipak",
+        "password": "klarinet<3",
+        "id": 4,
         "instruktor": true
     },
     {
         "ime_priimek": [
-            "Pave\u0161i\u010d",
-            "Petar"
+            "Po\u00c5\u00a1tar",
+            "Peter"
         ],
-        "username": "petrograd69",
-        "password": "pupukaka",
-        "id": 4,
-        "instruktor": true
+        "username": "pismonosa",
+        "password": "jazsempeter123",
+        "id": 5,
+        "instruktor": false
     }
 ]
