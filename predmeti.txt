@@ -1,4 +1,0 @@
-matematika;0;1
-matematika;1;2
-matematika;2;3
-fizika;1;4

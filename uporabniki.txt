@@ -1,4 +1,0 @@
-Safaric;Matej;Prof;1234;1;True
-bobek;marko;mbomba;bumbum;2;False
-Černigoj;Lana;booboo;booboo1;3;True
-Pipič;Mark;pipko1;pipak;4;True
